@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Edit Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: rgba(16,17,26,0.85);
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --radius-lg: 16px;
+    }
+    body {
+      margin:0;
+      font-family:Inter,sans-serif;
+      background:linear-gradient(135deg,#0b0b12 0%,#16162a 100%);
+      color:var(--text);
+    }
+    a {color:var(--accent); text-decoration:none;}
+    
+    /* Navbar */
+    .navbar {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 2rem; background:#10111a; border-bottom:1px solid var(--stroke);
+      position:sticky; top:0; z-index:100;
+    }
+    .navbar .logo {font-weight:700; font-size:1.3rem; color:white;}
+    .navbar nav a {margin:0 1rem; font-weight:500; transition:.2s;}
+    .navbar nav a:hover {color:var(--accent);}
+
+    /* Container */
+    .container {width:min(1100px,94vw); margin-inline:auto; padding:2rem; display:grid; grid-template-columns:2fr 1fr; gap:2rem;}
+
+    /* Card */
+    .card {
+      background:var(--panel);
+      border:1px solid var(--stroke);
+      border-radius:var(--radius-lg);
+      padding:1.5rem;
+      box-shadow:0 4px 20px rgba(0,0,0,0.35);
+      backdrop-filter:blur(12px);
+      margin-bottom:1.5rem;
+    }
+    h1,h2 {margin-bottom:1rem;}
+    label {display:block; margin:.8rem 0 .3rem; font-weight:600; font-size:.95rem;}
+    input, textarea {
+      width:100%; padding:.7rem 1rem; border-radius:12px;
+      border:1px solid var(--stroke); background:#181927; color:var(--text);
+      font-size:1rem;
+    }
+    textarea {min-height:100px;}
+    .form-row {display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;}
+
+    .save-btn {
+      margin-top:1.5rem; padding:.9rem 1.5rem; border:none;
+      border-radius:12px; background:var(--accent); color:white;
+      font-size:1rem; font-weight:600; cursor:pointer; width:100%;
+    }
+    .save-btn:hover {box-shadow:0 0 18px var(--accent);}
+    
+    /* Leaderboard */
+    .leaderboard ul {list-style:none; padding:0; margin:0;}
+    .leaderboard li {
+      padding:.6rem 1rem; margin:.3rem 0;
+      border-radius:10px; background:#181927; border:1px solid var(--stroke);
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .leaderboard li strong {color:var(--accent);}
+    
+    /* Project Zone */
+    .project {margin-bottom:1rem; padding:1rem; background:#181927; border-radius:12px; border:1px solid var(--stroke);}
+    .project h4 {margin:0 0 .4rem;}
+    .project p {font-size:.9rem; color:var(--muted);}
+    
+    /* Recruiter POV */
+    .recruiter-card {padding:1rem; background:#181927; border-radius:12px; border:1px solid var(--stroke);}
+    .skill-tag {display:inline-block; margin:.2rem; padding:.3rem .8rem; border-radius:999px; background:#1c1c32; font-size:.8rem; color:var(--accent);}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">PeerDeck</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="explore.html">Explore</a>
+      <a href="post.html">Post</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <!-- Content -->
+  <div class="container">
+    
+    <!-- LEFT: Edit Profile Form -->
+    <div>
+      <div class="card">
+        <h1>Edit Profile</h1>
+        <form>
+          <div class="form-row">
+            <div>
+              <label for="name">Full Name</label>
+              <input type="text" id="name" value="Aryan Sharma">
+            </div>
+            <div>
+              <label for="username">Username</label>
+              <input type="text" id="username" value="@aryan_dev">
+            </div>
+          </div>
+
+          <label for="bio">Bio</label>
+          <textarea id="bio">🚀 AI/ML Enthusiast | Building cool projects | Open-source contributor</textarea>
+
+          <label for="skills">Skills</label>
+          <input type="text" id="skills" value="AI, ML, React, Python, IoT">
+
+          <label for="github">GitHub</label>
+          <input type="url" id="github" value="https://github.com/aryan">
+
+          <label for="linkedin">LinkedIn</label>
+          <input type="url" id="linkedin">
+
+          <button type="submit" class="save-btn"> Save Changes</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: Dashboard Widgets -->
+    <div>
+      <!-- Leaderboard -->
+      <div class="card leaderboard">
+        <h2>🏆 Leaderboard</h2>
+        <ul>
+          <li><span>1. Ritika Singh</span><strong>1520 pts</strong></li>
+          <li><span>2. Aryan Sharma (You)</span><strong>1310 pts</strong></li>
+          <li><span>3. John D.</span><strong>1275 pts</strong></li>
+        </ul>
+      </div>
+
+      <!-- Project Zone -->
+      <div class="card">
+        <h2> Project Zone</h2>
+        <div class="project">
+          <h4>SmartWatts</h4>
+          <p>IoT-based smart home energy monitoring system.</p>
+        </div>
+        <div class="project">
+          <h4>Krishi Calendar+</h4>
+          <p>Farmer-focused crop planning and community app.</p>
+        </div>
+        <div class="project">
+          <h4>SkillReach</h4>
+          <p>On-demand local technician finder platform.</p>
+        </div>
+      </div>
+
+     <!-- Recruiter POV -->
+<div class="card recruiter-card">
+  <h2>Recruiter POV</h2>
+  <p><strong>Name:</strong> Aryan Sharma</p>
+  <p><strong>Role Fit:</strong> AI/ML Developer, Full Stack Engineer</p>
+  <p><strong>Top Skills:</strong></p>
+  <p><strong>Recent Project:</strong> Smart Farming IoT with AI-powered crop monitoring</p>
+  <span class="skill-tag">Python</span>
+  <span class="skill-tag">Machine Learning</span>
+  <span class="skill-tag">React</span>
+  <span class="skill-tag">IoT</span>
+  <span class="skill-tag">Blockchain</span>
+  
+  
+</div>
+
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · AI-Content Filter Details</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --success: #2fd17b;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin-inline: auto; padding: 1rem; }
+
+    /* Navbar */
+    .nav { background: var(--panel); border-bottom: 1px solid var(--stroke); }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: .8rem 0; }
+    .brand { font-weight: 700; }
+    .nav-links { display: flex; gap: 1rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    /* Project Details Section */
+    .details-section { padding: 3rem 0; }
+    .details-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    h1 { font-size: clamp(2rem, 3.6vw + .5rem, 3.2rem); margin: 0; }
+    .details-card { background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-1); }
+    .user-info { display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem; }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; background: #2c2f4a; display: flex; align-items: center; justify-content: center; font-size: .9rem; font-weight: 600; }
+    .username { font-weight: 600; }
+    .time { font-size: .8rem; color: var(--muted); }
+    .desc { font-size: .9rem; color: var(--muted); margin: 1rem 0; max-width: 60ch; }
+    .tags { display: flex; gap: .5rem; flex-wrap: wrap; margin: .6rem 0; }
+    .tag { font-size: .75rem; background: #1a1b31; padding: .2rem .5rem; border-radius: 999px; color: var(--muted); }
+    .metrics { display: flex; gap: 1rem; font-size: .85rem; color: var(--muted); margin: 1rem 0; }
+    .actions { display: flex; gap: .8rem; margin-top: 1rem; }
+    .pill { display: inline-flex; align-items: center; gap: .5rem; padding: .6rem 1rem; border: 1px solid var(--stroke); border-radius: 999px; background: #0f1020; }
+    .badge { font-size: .75rem; padding: .2rem .5rem; border: 1px solid var(--stroke); border-radius: 999px; color: var(--muted); }
+    .section-title { font-size: 1.2rem; font-weight: 600; margin: 1.5rem 0 .5rem; }
+    .section-content { font-size: .9rem; color: var(--muted); line-height: 1.6; max-width: 60ch; }
+
+    /* Buttons */
+    .btn { display: inline-flex; gap: .5rem; align-items: center; justify-content: center; padding: .4rem .9rem; border-radius: 8px; border: 1px solid var(--stroke); background: transparent; color: var(--muted); font-size: .85rem; font-weight: 600; cursor: pointer; }
+    .btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .btn.primary { background: var(--accent); color: #fff; border: none; }
+    .btn.success { background: #28a745; color: #fff; border: none; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--stroke); padding: 1.4rem 0; color: var(--muted); }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .container { width: min(100%, 92vw); }
+      .nav-links { display: none; }
+      .details-header { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    }
+    @media (max-width: 680px) {
+      .details-section { padding: 2rem 0; }
+      .actions { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">PeerDeck</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="feed.html">Feed</a>
+        <a href="explore.html">Explore</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Project Details Section -->
+  <section class="details-section">
+    <div class="container">
+      <div class="details-header">
+        <h1>AI Content Filter</h1>
+        <span class="badge">AI · NLP</span>
+      </div>
+      <div class="details-card">
+        <div class="user-info">
+          <div class="avatar">MK</div>
+          <div>
+            <div class="username">Mohit K.</div>
+            <div class="time">Posted 3 days ago</div>
+          </div>
+        </div>
+        <p class="desc">Detects and blocks AI-generated posts to keep content authentic across student communities. Built as part of an NLP course project, this classifier uses TensorFlow to analyze text patterns and ensure genuine student contributions.</p>
+        <div class="tags">
+          <span class="tag">AI</span>
+          <span class="tag">NLP</span>
+          <span class="tag">Course: NLP</span>
+          <span class="tag">Stack: Python + TF</span>
+          <span class="tag">Trust & Safety</span>
+        </div>
+        <div class="metrics">
+          <span>⬆ Upvotes: 980</span>
+          <span>★ Stars: 820</span>
+          <span>Forks: 45</span>
+          <span>F1 Score: 0.74</span>
+        </div>
+        <div class="section-title">Project Goals</div>
+        <p class="section-content">The AI-Content Filter aims to maintain authenticity on PeerDeck by identifying and downranking AI-generated content, ensuring student work reflects genuine effort and creativity. The project focuses on improving trust and safety in student communities.</p>
+        <div class="section-title">Tech Stack</div>
+        <p class="section-content">Built with Python and TensorFlow, leveraging LSTM models for text classification. Integrated with PeerDeck’s backend (Node.js, MongoDB) for real-time content filtering.</p>
+        <div class="section-title">Impact</div>
+        <p class="section-content">Enhances the credibility of student projects by prioritizing authentic contributions, supporting PeerDeck’s mission to connect students with real-world opportunities based on verified work.</p>
+        <div class="actions">
+          <a class="btn primary" href="repo.html">View Repository</a>
+          <a class="btn success" href="livedemo.html">Live Demo</a>
+          <a class="btn" href="explore.html">Back to Explore</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap">
+      <div style="display:flex; align-items:center; gap:.6rem">
+        <div class="avatar" style="width:24px; height:24px; border-radius:8px; background:conic-gradient(from 60deg, var(--accent), #10c7b6, #ff6db4, var(--accent));"></div>
+        <span>© <span id="year"></span> PeerDeck</span>
+      </div>
+      <div style="display:flex; gap:1rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

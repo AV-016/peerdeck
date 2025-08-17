@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Leaderboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --elev: #151628;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --accent-2: #10c7b6;
+      --accent-3: #ff6db4;
+      --success: #2fd17b;
+      --warning: #ffd166;
+      --danger: #ff6b6b;
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,123,255,.2), transparent 50%),
+                  radial-gradient(1200px 600px at 90% 0%, rgba(16,199,182,.2), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin-inline: auto; padding: 2rem 0; }
+    .pill { display: inline-flex; align-items: center; gap: .5rem; padding: .6rem 1rem; border: 1px solid var(--stroke); border-radius: 999px; background: #0f1020; }
+
+    /* Navbar */
+    .nav {
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      border-bottom: 1px solid var(--stroke);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: .9rem 0; }
+    .logo { font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+    .nav-links { display: flex; gap: .8rem; align-items: center; }
+    .nav-links a { padding: .55rem .9rem; border-radius: 10px; color: var(--muted); text-decoration: none; }
+    .nav-links a:hover { color: var(--text); background: #0f1020; }
+
+    /* Leaderboard Section */
+    .leaderboard-section { padding: 3rem 0; }
+    .leaderboard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .leaderboard-card { border: 1px solid var(--stroke); background: linear-gradient(180deg, #121327, #0e0f1f); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-1); }
+    .leaderboard-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .leaderboard-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; }
+    .leaderboard-item { display: flex; justify-content: space-between; align-items: center; padding: .8rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: var(--panel); }
+    .item-info { display: flex; align-items: center; gap: 1rem; }
+    .rank { font-weight: 700; font-size: 1.2rem; }
+    .name { font-weight: 600; }
+    .stats { text-align: right; color: var(--muted); }
+    .project-name { font-size: .9rem; color: var(--muted); }
+    .timestamp { font-size: .8rem; color: var(--muted); margin-top: .2rem; }
+    h1 { font-size: clamp(2rem, 3.6vw + .5rem, 3.2rem); margin: 0 0 1rem; }
+
+    /* Buttons */
+    .btn { display: inline-flex; gap: .5rem; align-items: center; justify-content: center; padding: .7rem 1rem; border-radius: 12px; border: 1px solid var(--stroke); background: linear-gradient(180deg, #1a1b31, #121327); color: var(--text); font-weight: 600; }
+    .btn:hover { border-color: #2a2e57; }
+    .btn.primary { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 40%, #1a1b31), #161739); border-color: color-mix(in srgb, var(--accent) 40%, #2a2e57); }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .container { width: min(100%, 92vw); }
+      .nav-links { display: none; }
+      .leaderboard-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .leaderboard-section { padding: 2rem 0; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="logo">PeerDeck </div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html">Dashboard</a>
+        <a href="repo.html">View Repositary </a>
+        <a href="explore.html">Jobs</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Leaderboard Section -->
+  <section class="leaderboard-section">
+    <div class="container">
+      <h1>Leaderboard</h1>
+      <div class="leaderboard-grid">
+        <!-- User Leaderboard -->
+        <div class="leaderboard-card">
+          <div class="leaderboard-head">
+            <strong>Rising Stars</strong>
+            <span class="pill">Weekly Growth</span>
+          </div>
+          <ul class="leaderboard-list">
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#1</span>
+                <href="userprofile.html">
+               <div>
+  <div class="name"><a href="userprofile.html" style="color: var(--text); text-decoration: none;">Aryan Srivastava</a></div>
+  <div class="project-name">Last: AI-Content Filter</div>
+</div>
+              </div>
+              <div class="stats">
+                <div>Upvotes: 950</div>
+                <div>Growth: +45%</div>
+              </div>
+            </li>
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#2</span>
+                <div>
+                  <div class="name">Anushka Vajpayee</div>
+                  <div class="project-name">Last: HealthTrack+ App</div>
+                </div>
+              </div>
+              <div class="stats">
+                <div>Upvotes: 820</div>
+                <div>Growth: +40%</div>
+              </div>
+            </li>
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#3</span>
+                <div>
+                  <div class="name">Priyanshu Kumar</div>
+                  <div class="project-name">Last: NGO Volunteering Portal</div>
+                </div>
+              </div>
+              <div class="stats">
+                <div>Upvotes: 650</div>
+                <div>Growth: +35%</div>
+              </div>
+            </li>
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#4</span>
+                <div>
+                  <div class="name">Jane Doe</div>
+                  <div class="project-name">Last: CampusJobs ML Recommender</div>
+                </div>
+              </div>
+              <div class="stats">
+                <div>Upvotes: 420</div>
+                <div>Growth: +37%</div>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Project Leaderboard -->
+        <div class="leaderboard-card">
+          <div class="leaderboard-head">
+            <strong>Trending Projects</strong>
+            <span class="pill">Hot This Week</span>
+          </div>
+          <ul class="leaderboard-list">
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#1</span>
+                <div>
+                  <div class="name">AI-Content Filter</div>
+                  <div class="project-name">Research · Team Orion</div>
+                  <div class="timestamp">Posted 2 days ago</div>
+                </div>
+              </div>
+              <div class="stats">
+                <div>+820 upvotes</div>
+                <a class="btn" href="trend.html">View More</a>
+              </div>
+            </li>
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#2</span>
+                <div>
+                  <div class="name">HealthTrack+ App</div>
+                  <div class="project-name">Health · CS × Biotech</div>
+                  <div class="timestamp">Posted 4 days ago</div>
+                </div>
+              </div>
+              <div class="stats">
+                <div>+650 upvotes</div>
+                <a class="btn" href="project/healthtrack-app.html">View More</a>
+              </div>
+            </li>
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#3</span>
+                <div>
+                  <div class="name">NGO Volunteering Portal</div>
+                  <div class="project-name">Social Impact</div>
+                  <div class="timestamp">Posted 1 week ago</div>
+                </div>
+              </div>
+              <div class="stats">
+                <div>+540 upvotes</div>
+                <a class="btn" href="project/ngo-portal.html">View More</a>
+              </div>
+            </li>
+            <li class="leaderboard-item">
+              <div class="item-info">
+                <span class="rank">#4</span>
+                <div>
+                  <div class="name">CampusJobs ML Recommender</div>
+                  <div class="project-name">Internships · ML Foundations</div>
+                  <div class="timestamp">Posted 10 days ago</div>
+                </div>
+              </div>
+              <div class="stats">
+                <div>+420 upvotes</div>
+                <a class="btn" href="project/campusjobs-recommender.html">View More</a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+ 
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -20,12 +20,22 @@
     *{box-sizing:border-box}
     body{margin:0; font-family:Inter, sans-serif; background:var(--bg); color:var(--text)}
     .container{width:min(1200px,92vw); margin-inline:auto}
-    .nav{position:sticky; top:0; background:var(--panel); border-bottom:1px solid var(--stroke)}
+    .nav{position:sticky; top:0; background:var(--panel); border-bottom:1px solid var(--stroke); z-index:1000;}
     .nav-inner{display:flex; justify-content:space-between; align-items:center; padding:.8rem 0}
     .brand{font-weight:700}
     .nav-links{display:flex; gap:1rem}
     .nav-links a{color:var(--muted); text-decoration:none}
     .nav-links a:hover{color:var(--text)}
+    .cta-btn{
+      background:var(--accent);
+      color:#fff;
+      font-weight:600;
+      padding:.4rem .9rem;
+      border-radius:999px;
+      text-decoration:none;
+      transition:0.2s;
+    }
+    .cta-btn:hover{opacity:.85;}
     h1{font-size:2rem; margin:1rem 0}
     .layout{display:grid; grid-template-columns:2fr 1fr; gap:1.5rem}
     .card{background:var(--panel); border:1px solid var(--stroke); border-radius:var(--radius-lg); padding:1rem; margin-bottom:1rem}
@@ -50,22 +60,24 @@
     .searchbar{flex:1; margin:0 1rem}
     .searchbar input{width:100%; padding:.6rem 1rem; border-radius:999px; border:1px solid var(--stroke); background:var(--panel); color:var(--text)}
     .profile{display:flex; align-items:center; gap:.6rem}
-    .leaderboard-box, .trending-box{margin-bottom:1rem}
     .leaderboard-item{display:flex; justify-content:space-between; padding:.4rem 0; border-bottom:1px solid var(--stroke); font-size:.9rem}
   </style>
 </head>
 <body>
+  <!-- Navbar -->
   <nav class="nav">
     <div class="container nav-inner">
       <div class="brand">PeerDeck</div>
       <div class="nav-links">
-        <a href="local.html">Local Feed</a>
-        <a href="feed.html">Global Feed</a>
+        <a href="index.html">Home</a>
+        <a href="explore.html">Oppertunities</a>
         <a href="leaderboard.html">Leaderboard</a>
       </div>
+      <a href="post.html" class="cta-btn">+ Post Project</a>
     </div>
   </nav>
 
+  <!-- Search + Profile -->
   <div class="container top-bar">
     <div class="searchbar"><input type="text" placeholder="Search projects or users..."></div>
     <div class="profile">
@@ -76,259 +88,248 @@
 
   <main class="container layout">
     <section>
-  <div class="feed-toggle">
-    <a id="local-btn" class="active">Local</a>
-    <a id="global-btn">Global</a>
-  </div>
+      <div class="feed-toggle">
+        <a id="local-btn" class="active">Local</a>
+        <a id="global-btn">Global</a>
+      </div>
 
-  <!-- ================= Local Feed ================= -->
-  <div id="local-feed">
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">RK</div>
-          <div>
-            <div class="username">Ritika K.</div>
-            <div class="time">1h ago</div>
+      <!-- ================= Local Feed ================= -->
+      <div id="local-feed">
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">RK</div>
+              <div>
+                <div class="username">Ritika K.</div>
+                <div class="time">1h ago</div>
+              </div>
+            </div>
+            <span class="tag">Internship</span>
           </div>
-        </div>
-        <span class="tag">Internship</span>
-      </div>
-      <div class="post-content">
-        Company near CU hiring ML interns. Show 1 course-backed ML project to apply.
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 120</button>
-          <button class="vote-btn">⬇ 5</button>
-        </div>
-        <div class="tags"><span class="tag">ML</span><span class="tag">Python</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
-
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">RS</div>
-          <div>
-            <div class="username">Rashmi Sm.</div>
-            <div class="time">14h ago</div>
+          <div class="post-content">
+            Company near CU hiring ML interns. Show 1 course-backed ML project to apply.
           </div>
-        </div>
-        <span class="tag">Project</span>
-      </div>
-      <div class="post-content">
-        Created an amazing project based on Climate change awareness.
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 10</button>
-          <button class="vote-btn">⬇ 65</button>
-        </div>
-        <div class="tags"><span class="tag">Sustainability</span><span class="tag">DataViz</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
-
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">AK</div>
-          <div>
-            <div class="username">Arjun K.</div>
-            <div class="time">2d ago</div>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 120</button>
+              <button class="vote-btn">⬇ 5</button>
+            </div>
+            <div class="tags"><span class="tag">ML</span><span class="tag">Python</span></div>
           </div>
-        </div>
-        <span class="tag">Collaboration</span>
-      </div>
-      <div class="post-content">
-        Looking for a biotech student to join me on a diabetes tracker app for an upcoming hackathon.
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 58</button>
-          <button class="vote-btn">⬇ 2</button>
-        </div>
-        <div class="tags"><span class="tag">Health</span><span class="tag">React</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
+          <span class="know-more">Know more →</span>
+        </article>
 
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">VS</div>
-          <div>
-            <div class="username">Vikas S.</div>
-            <div class="time">3d ago</div>
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">RS</div>
+              <div>
+                <div class="username">Rashmi Sm.</div>
+                <div class="time">14h ago</div>
+              </div>
+            </div>
+            <span class="tag">Project</span>
           </div>
-        </div>
-        <span class="tag">Showcase</span>
-      </div>
-      <div class="post-content">
-        Shared my DBMS-based NGO Volunteer Management prototype from CU coursework.
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 80</button>
-          <button class="vote-btn">⬇ 4</button>
-        </div>
-        <div class="tags"><span class="tag">DBMS</span><span class="tag">MySQL</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
-  </div>
-
-  <!-- ================= Global Feed ================= -->
-  <div id="global-feed" style="display:none;">
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">MK</div>
-          <div>
-            <div class="username">Mohit Kumar</div>
-            <div class="time">3h ago</div>
+          <div class="post-content">
+            Created an amazing project based on Climate change awareness.
           </div>
-        </div>
-        <span class="tag">Research</span>
-      </div>
-      <div class="post-content">
-        Prototype to detect and filter AI-generated content for authenticity.
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 300</button>
-          <button class="vote-btn">⬇ 12</button>
-        </div>
-        <div class="tags"><span class="tag">AI</span><span class="tag">NLP</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
-
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">SP</div>
-          <div>
-            <div class="username">Sonia P.</div>
-            <div class="time">7h ago</div>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 10</button>
+              <button class="vote-btn">⬇ 65</button>
+            </div>
+            <div class="tags"><span class="tag">Sustainability</span><span class="tag">DataViz</span></div>
           </div>
-        </div>
-        <span class="tag">Hackathon</span>
-      </div>
-      <div class="post-content">
-        Our team just won 2nd place at the Global Health Hackathon with HealthTrack+!
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 500</button>
-          <button class="vote-btn">⬇ 20</button>
-        </div>
-        <div class="tags"><span class="tag">Biotech</span><span class="tag">MobileApp</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
+          <span class="know-more">Know more →</span>
+        </article>
 
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">JD</div>
-          <div>
-            <div class="username">John D.</div>
-            <div class="time">1d ago</div>
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">AK</div>
+              <div>
+                <div class="username">Arjun K.</div>
+                <div class="time">2d ago</div>
+              </div>
+            </div>
+            <span class="tag">Collaboration</span>
           </div>
-        </div>
-        <span class="tag">Open Source</span>
-      </div>
-      <div class="post-content">
-        Started an NGO mentorship tracker. Looking for React + Python contributors!
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 220</button>
-          <button class="vote-btn">⬇ 6</button>
-        </div>
-        <div class="tags"><span class="tag">OpenSource</span><span class="tag">React</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
-
-    <article class="card">
-      <div class="post-header">
-        <div class="user-info">
-          <div class="avatar">LM</div>
-          <div>
-            <div class="username">Laura M.</div>
-            <div class="time">2d ago</div>
+          <div class="post-content">
+            Looking for a biotech student to join me on a diabetes tracker app for an upcoming hackathon.
           </div>
-        </div>
-        <span class="tag">Innovation</span>
-      </div>
-      <div class="post-content">
-        Released a paper on a solar-powered IoT irrigation controller for smart farming.
-      </div>
-      <div class="post-footer">
-        <div class="vote-btns">
-          <button class="vote-btn">⬆ 410</button>
-          <button class="vote-btn">⬇ 18</button>
-        </div>
-        <div class="tags"><span class="tag">IoT</span><span class="tag">Energy</span></div>
-      </div>
-      <span class="know-more">Know more →</span>
-    </article>
-  </div>
-</section>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 58</button>
+              <button class="vote-btn">⬇ 2</button>
+            </div>
+            <div class="tags"><span class="tag">Health</span><span class="tag">React</span></div>
+          </div>
+          <span class="know-more">Know more →</span>
+        </article>
 
-<aside>
-        <div class="card">
-          <h3> Trending</h3>
-          <div class="leaderboard-item"><span>HealthTrack+ App</span><span>⭐ 1200</span></div>
-          <div class="leaderboard-item"><span>AI Content Filter</span><span>⭐ 980</span></div>
-          <div class="leaderboard-item"><span>Frontend Intern</span><span>⭐ 740</span></div>
-        </div>
-        <div class="card">
-          <h3> Leaderboard</h3>
-          <div class="leaderboard-item"><span>CampusJobs Recommender</span><span>#5</span></div>
-          <div class="leaderboard-item"><span>ML NGO Role</span><span>#8</span></div>
-          <div class="leaderboard-item"><span>Smart Farming IoT</span><span>#12</span></div>
-        </div>
-          <!--  Recent Activity Section -->
-              <div class="card">
-                 <h3> Recent Activity</h3>
-                     <ul id="activityFeed" style="list-style:none; margin:0; padding:0; font-size:.9rem; color:var(--muted); line-height:1.6;">
-                     <li> Mohit upvoted your <b>AI Content Filter</b></li>
-                         <li> Sonia commented “Great work!” on <b>HealthTrack+ App</b></li>
-                         <li> Aryan started following you</li>
-                         <li> John posted a new project <b>NGO Volunteering Portal</b></li>
-                        <li> Ritika upvoted your <b>Smart Farming IoT</b></li>
-                         <li> New job posted: <b>ML Intern at TechLabs (Local)</b></li>
-                        <li> Rashmi replied to your thread on <b>Climate Change Project</b></li>
-                         <li> Arjun followed you</li>
-                         <li> Sonia shared her new project <b>Health Insights Dashboard</b></li>
-                     <li> John upvoted your <b>CampusJobs Recommender</b></li>
-                        <li> Mohit left feedback on <b>IoT Irrigation Controller</b></li>
-                              <li> Rashmi followed your profile</li>
-                         <li> Ritika published a new <b>ML-based Resume Screener</b></li>
-                     <li> New job posted: <b>Frontend Developer (Remote)</b></li>
-     </ul>
-        </div>
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">VS</div>
+              <div>
+                <div class="username">Vikas S.</div>
+                <div class="time">3d ago</div>
+              </div>
+            </div>
+            <span class="tag">Showcase</span>
+          </div>
+          <div class="post-content">
+            Shared my DBMS-based NGO Volunteer Management prototype from CU coursework.
+          </div>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 80</button>
+              <button class="vote-btn">⬇ 4</button>
+            </div>
+            <div class="tags"><span class="tag">DBMS</span><span class="tag">MySQL</span></div>
+          </div>
+          <span class="know-more">Know more →</span>
+        </article>
+      </div>
 
-    <script>
-    // Dynamic scroll effect for activity
-    const activityFeed = document.getElementById("activityFeed");
-    setInterval(()=>{
-      const first = activityFeed.firstElementChild;
-      if(first){
-        activityFeed.appendChild(first); // move first item to bottom
-      }
-    }, 2500); // every 2.5 seconds
-  </script>
+      <!-- ================= Global Feed ================= -->
+      <div id="global-feed">
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">MK</div>
+              <div>
+                <div class="username">Mohit Kumar</div>
+                <div class="time">3h ago</div>
+              </div>
+            </div>
+            <span class="tag">Research</span>
+          </div>
+          <div class="post-content">
+            Prototype to detect and filter AI-generated content for authenticity.
+          </div>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 300</button>
+              <button class="vote-btn">⬇ 12</button>
+            </div>
+            <div class="tags"><span class="tag">AI</span><span class="tag">NLP</span></div>
+          </div>
+          <span class="know-more">Know more →</span>
+        </article>
 
-      </aside>
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">SP</div>
+              <div>
+                <div class="username">Sonia P.</div>
+                <div class="time">7h ago</div>
+              </div>
+            </div>
+            <span class="tag">Hackathon</span>
+          </div>
+          <div class="post-content">
+            Our team just won 2nd place at the Global Health Hackathon with HealthTrack+!
+          </div>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 500</button>
+              <button class="vote-btn">⬇ 20</button>
+            </div>
+            <div class="tags"><span class="tag">Biotech</span><span class="tag">MobileApp</span></div>
+          </div>
+          <span class="know-more">Know more →</span>
+        </article>
+
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">JD</div>
+              <div>
+                <div class="username">John D.</div>
+                <div class="time">1d ago</div>
+              </div>
+            </div>
+            <span class="tag">Open Source</span>
+          </div>
+          <div class="post-content">
+            Started an NGO mentorship tracker. Looking for React + Python contributors!
+          </div>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 220</button>
+              <button class="vote-btn">⬇ 6</button>
+            </div>
+            <div class="tags"><span class="tag">OpenSource</span><span class="tag">React</span></div>
+          </div>
+          <span class="know-more">Know more →</span>
+        </article>
+
+        <article class="card">
+          <div class="post-header">
+            <div class="user-info">
+              <div class="avatar">LM</div>
+              <div>
+                <div class="username">Laura M.</div>
+                <div class="time">2d ago</div>
+              </div>
+            </div>
+            <span class="tag">Innovation</span>
+          </div>
+          <div class="post-content">
+            Released a paper on a solar-powered IoT irrigation controller for smart farming.
+          </div>
+          <div class="post-footer">
+            <div class="vote-btns">
+              <button class="vote-btn">⬆ 410</button>
+              <button class="vote-btn">⬇ 18</button>
+            </div>
+            <div class="tags"><span class="tag">IoT</span><span class="tag">Energy</span></div>
+          </div>
+          <span class="know-more">Know more →</span>
+        </article>
+      </div>
+    </section>
+
+    <!-- Sidebar -->
+    <aside>
+      <div class="card">
+        <h3>Trending</h3>
+        <div class="leaderboard-item"><span>HealthTrack+ App</span><span>⭐ 1200</span></div>
+        <div class="leaderboard-item"><span>AI Content Filter</span><span>⭐ 980</span></div>
+        <div class="leaderboard-item"><span>Frontend Intern</span><span>⭐ 740</span></div>
+      </div>
+      <div class="card">
+        <h3>Leaderboard</h3>
+        <div class="leaderboard-item"><span>CampusJobs Recommender</span><span>#5</span></div>
+        <div class="leaderboard-item"><span>ML NGO Role</span><span>#8</span></div>
+        <div class="leaderboard-item"><span>Smart Farming IoT</span><span>#12</span></div>
+      </div>
+      <div class="card">
+        <h3>Recent Activity</h3>
+        <ul id="activityFeed" style="list-style:none; margin:0; padding:0; font-size:.9rem; color:var(--muted); line-height:1.6;">
+          <li>Mohit upvoted your <b>AI Content Filter</b></li>
+          <li>Sonia commented “Great work!” on <b>HealthTrack+ App</b></li>
+          <li>Aryan started following you</li>
+          <li>John posted a new project <b>NGO Volunteering Portal</b></li>
+          <li>Ritika upvoted your <b>Smart Farming IoT</b></li>
+          <li>New job posted: <b>ML Intern at TechLabs (Local)</b></li>
+          <li>Rashmi replied to your thread on <b>Climate Change Project</b></li>
+          <li>Arjun followed you</li>
+          <li>Sonia shared her new project <b>Health Insights Dashboard</b></li>
+          <li>John upvoted your <b>CampusJobs Recommender</b></li>
+          <li>Mohit left feedback on <b>IoT Irrigation Controller</b></li>
+          <li>Rashmi followed your profile</li>
+          <li>Ritika published a new <b>ML-based Resume Screener</b></li>
+          <li>New job posted: <b>Frontend Developer (Remote)</b></li>
+        </ul>
+      </div>
+    </aside>
   </main>
 
   <script>
+    // Toggle Local / Global
     const localBtn = document.getElementById('local-btn');
     const globalBtn = document.getElementById('global-btn');
     const localFeed = document.getElementById('local-feed');
@@ -347,6 +348,13 @@
       globalFeed.style.display = 'block';
       localFeed.style.display = 'none';
     });
+
+    // Auto-scroll Recent Activity
+    const activityFeed = document.getElementById("activityFeed");
+    setInterval(()=>{
+      const first = activityFeed.firstElementChild;
+      if(first){ activityFeed.appendChild(first); }
+    }, 2500);
   </script>
 </body>
 </html>
