@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Explore</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --radius-lg: 14px;
+    }
+    body {margin:0; font-family:Inter,sans-serif; background:var(--bg); color:var(--text);}
+    .container {width:min(1200px,92vw); margin-inline:auto; padding:1rem;}
+    .nav {background:var(--panel); border-bottom:1px solid var(--stroke);}
+    .nav-inner {display:flex; justify-content:space-between; align-items:center; padding:.8rem 0;}
+    .brand {font-weight:700;}
+    .nav-links {display:flex; gap:1rem;}
+    .nav-links a {color:var(--muted); text-decoration:none;}
+    .nav-links a:hover {color:var(--text);}
+    h1 {margin:1rem 0;}
+
+    /* Layout */
+    .layout {display:grid; grid-template-columns:2fr 1fr; gap:1.5rem; margin-top:1rem;}
+
+    /* Filters + Toggle */
+    .filters {display:flex; gap:1rem; margin:1rem 0; align-items:center;}
+    .searchbar {flex:1;}
+    .searchbar input, .filter-select {
+      width:100%; padding:.6rem 1rem; border-radius:999px;
+      border:1px solid var(--stroke); background:var(--panel); color:var(--text);
+    }
+    .filter-select {flex:0.4;}
+    .toggle {display:flex; gap:1rem;}
+    .toggle button {padding:.5rem 1rem; border-radius:999px; border:1px solid var(--stroke); background:transparent; color:var(--muted); cursor:pointer;}
+    .toggle button.active {background:var(--accent); color:#fff;}
+
+    /* Cards */
+    .grid {display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.2rem;}
+    .card {background:var(--panel); border:1px solid var(--stroke); border-radius:var(--radius-lg); padding:1rem; display:flex; flex-direction:column; justify-content:space-between;}
+    .card h3 {margin:0 0 .4rem;}
+    .desc {font-size:.9rem; color:var(--muted); margin-bottom:.8rem;}
+    .tags {display:flex; gap:.5rem; flex-wrap:wrap; margin:.6rem 0;}
+    .tag {font-size:.75rem; background:#1a1b31; padding:.2rem .5rem; border-radius:999px; color:var(--muted);}
+    .footer {display:flex; justify-content:space-between; align-items:center; margin-top:.8rem;}
+    .vote-btns {display:flex; gap:.5rem;}
+    .vote-btn {padding:.3rem .7rem; border-radius:8px; border:1px solid var(--stroke); background:transparent; color:var(--muted); cursor:pointer;}
+    .vote-btn:hover {background:var(--accent); color:#fff;}
+    .details-btn {padding:.4rem .9rem; background:var(--accent); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:.85rem;}
+    .apply-btn {padding:.4rem .9rem; background:#28a745; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:.85rem;}
+
+    /* User info */
+    .user-info {display:flex; align-items:center; gap:.6rem; margin-bottom:.6rem;}
+    .avatar {width:32px; height:32px; border-radius:50%; background:#2c2f4a; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:600;}
+    .username {font-weight:600;}
+    .time {font-size:.8rem; color:var(--muted);}
+    .location {font-size:.8rem; color:var(--muted); margin-top:.4rem;}
+
+    /* Sidebar */
+    aside .card {margin-bottom:1rem;}
+    .leaderboard-item {display:flex; justify-content:space-between; padding:.4rem 0; border-bottom:1px solid var(--stroke); font-size:.9rem;}
+
+    #projects-grid {display:grid;}
+    #jobs-grid {display:none;}
+  </style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">PeerDeck</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="feed.html">Feed</a>
+        <a href="explore.html" class="active">Explore</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1> Explore</h1>
+    <div class="layout">
+      <!-- Main content -->
+      <section>
+        <!-- Toggle -->
+        <div class="toggle">
+          <button id="projectsBtn" class="active">Projects</button>
+          <button id="jobsBtn">Jobs</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters">
+          <div class="searchbar">
+            <input type="text" id="searchInput" placeholder="Search projects or jobs...">
+          </div>
+          <select id="tagFilter" class="filter-select">
+            <option value="all">All Tags</option>
+            <option value="ML">ML</option>
+            <option value="AI">AI</option>
+            <option value="IoT">IoT</option>
+            <option value="Biotech">Biotech</option>
+            <option value="SocialImpact">SocialImpact</option>
+            <option value="Internship">Internship</option>
+          </select>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="grid" id="projects-grid">
+          <!-- Project 1 -->
+          <div class="card" data-tags="Biotech MobileApp" data-title="HealthTrack+ App">
+            <div>
+              <div class="user-info"><div class="avatar">SP</div><div><div class="username">Sonia P.</div><div class="time">7h ago</div></div></div>
+              <h3>HealthTrack+ App</h3>
+              <p class="desc">Mobile app that monitors vitals and integrates with wearables. Built during Global Health Hackathon.</p>
+              <div class="tags"><span class="tag">Biotech</span><span class="tag">MobileApp</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 1200</button><button class="vote-btn">⬇ 30</button></div><button class="details-btn">View Details</button></div>
+          </div>
+          <!-- Project 2 -->
+          <div class="card" data-tags="ML Recommendation" data-title="CampusJobs ML Recommender">
+            <div>
+              <div class="user-info"><div class="avatar">AS</div><div><div class="username">Aryan S.</div><div class="time">1d ago</div></div></div>
+              <h3>CampusJobs ML Recommender</h3>
+              <p class="desc">Recommends internships and projects to students based on their skills.</p>
+              <div class="tags"><span class="tag">ML</span><span class="tag">Recommendation</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 540</button><button class="vote-btn">⬇ 12</button></div><button class="details-btn">View Details</button></div>
+          </div>
+          <!-- Project 3 -->
+          <div class="card" data-tags="IoT AgriTech" data-title="Smart Farming IoT">
+            <div>
+              <div class="user-info"><div class="avatar">AK</div><div><div class="username">Arjun K.</div><div class="time">2d ago</div></div></div>
+              <h3>Smart Farming IoT</h3>
+              <p class="desc">Solar-powered irrigation controller with IoT sensors, helping farmers save water and energy.</p>
+              <div class="tags"><span class="tag">IoT</span><span class="tag">AgriTech</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 720</button><button class="vote-btn">⬇ 18</button></div><button class="details-btn">View Details</button></div>
+          </div>
+          <!-- Project 4 -->
+          <div class="card" data-tags="AI NLP" data-title="AI Content Filter">
+            <div>
+              <div class="user-info"><div class="avatar">MK</div><div><div class="username">Mohit K.</div><div class="time">3d ago</div></div></div>
+              <h3>AI Content Filter</h3>
+              <p class="desc">Detects and blocks AI-generated posts to keep content authentic across student communities.</p>
+              <div class="tags"><span class="tag">AI</span><span class="tag">NLP</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 980</button><button class="vote-btn">⬇ 22</button></div><button class="details-btn">View Details</button></div>
+          </div>
+          <!-- Project 5 -->
+          <div class="card" data-tags="SocialImpact WebApp" data-title="NGO Volunteering Portal">
+            <div>
+              <div class="user-info"><div class="avatar">JD</div><div><div class="username">John D.</div><div class="time">5d ago</div></div></div>
+              <h3>NGO Volunteering Portal</h3>
+              <p class="desc">Web portal connecting NGOs with student volunteers for real-world social impact projects.</p>
+              <div class="tags"><span class="tag">SocialImpact</span><span class="tag">WebApp</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 860</button><button class="vote-btn">⬇ 50</button></div><button class="details-btn">View Details</button></div>
+          </div>
+        </div>
+
+        <!-- Jobs Grid -->
+        <div class="grid" id="jobs-grid">
+          <!-- Job 1 -->
+          <div class="card" data-tags="Internship React Local" data-title="Frontend Intern - CU Startup">
+            <div>
+              <div class="user-info"><div class="avatar">CU</div><div><div class="username">Chandigarh Startup</div><div class="time">3h ago</div></div></div>
+              <h3>Frontend Intern - CU Startup</h3>
+              <p class="desc">Looking for React intern near CU. Paid 2-month internship.</p>
+              <p class="location"> Chandigarh, India</p>
+              <div class="tags"><span class="tag">Internship</span><span class="tag">React</span><span class="tag">Local</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 90</button><button class="vote-btn">⬇ 3</button></div><button class="apply-btn">Apply Now</button></div>
+          </div>
+          <!-- Job 2 -->
+          <div class="card" data-tags="ML Global Remote" data-title="ML Engineer - Global NGO">
+            <div>
+              <div class="user-info"><div class="avatar">GH</div><div><div class="username">Global Health NGO</div><div class="time">6h ago</div></div></div>
+              <h3>ML Engineer - Global NGO</h3>
+              <p class="desc">Help build a disease outbreak prediction system.</p>
+              <p class="location">Remote (Global)</p>
+              <div class="tags"><span class="tag">ML</span><span class="tag">Global</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 210</button><button class="vote-btn">⬇ 9</button></div><button class="apply-btn">Apply Now</button></div>
+          </div>
+          <!-- Job 3 -->
+          <div class="card" data-tags="AI Internship Local" data-title="AI Research Intern - CU Lab">
+            <div>
+              <div class="user-info"><div class="avatar">CU</div><div><div class="username">CU Research Lab</div><div class="time">1d ago</div></div></div>
+              <h3>AI Research Intern - CU Lab</h3>
+              <p class="desc">Join the AI & Robotics lab for hands-on research experience.</p>
+              <p class="location"> Mohali, Punjab</p>
+              <div class="tags"><span class="tag">AI</span><span class="tag">Internship</span><span class="tag">Local</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 130</button><button class="vote-btn">⬇ 6</button></div><button class="apply-btn">Apply Now</button></div>
+          </div>
+          <!-- Job 4 -->
+          <div class="card" data-tags="IoT Global" data-title="IoT Engineer - AgriTech Co.">
+            <div>
+              <div class="user-info"><div class="avatar">AT</div><div><div class="username">AgriTech Global</div><div class="time">2d ago</div></div></div>
+              <h3>IoT Engineer - AgriTech Co.</h3>
+              <p class="desc">Develop IoT devices for smart irrigation and crop monitoring.</p>
+              <p class="location"> Berlin, Germany</p>
+              <div class="tags"><span class="tag">IoT</span><span class="tag">Global</span></div>
+            </div>
+            <div class="footer"><div class="vote-btns"><button class="vote-btn">⬆ 300</button><button class="vote-btn">⬇ 15</button></div><button class="apply-btn">Apply Now</button></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sidebar -->
+      <aside>
+        <div class="card">
+          <h3> Trending</h3>
+          <div class="leaderboard-item"><span>HealthTrack+ App</span><span>⭐ 1200</span></div>
+          <div class="leaderboard-item"><span>AI Content Filter</span><span>⭐ 980</span></div>
+          <div class="leaderboard-item"><span>Frontend Intern</span><span>⭐ 740</span></div>
+        </div>
+        <div class="card">
+          <h3> Leaderboard</h3>
+          <div class="leaderboard-item"><span>CampusJobs Recommender</span><span>#5</span></div>
+          <div class="leaderboard-item"><span>ML NGO Role</span><span>#8</span></div>
+          <div class="leaderboard-item"><span>Smart Farming IoT</span><span>#12</span></div>
+        </div>
+          <!--  Recent Activity Section -->
+              <div class="card">
+                 <h3> Recent Activity</h3>
+                     <ul id="activityFeed" style="list-style:none; margin:0; padding:0; font-size:.9rem; color:var(--muted); line-height:1.6;">
+                     <li> Mohit upvoted your <b>AI Content Filter</b></li>
+                         <li> Sonia commented “Great work!” on <b>HealthTrack+ App</b></li>
+                         <li> Aryan started following you</li>
+                         <li> John posted a new project <b>NGO Volunteering Portal</b></li>
+                        <li> Ritika upvoted your <b>Smart Farming IoT</b></li>
+                         <li> New job posted: <b>ML Intern at TechLabs (Local)</b></li>
+                        <li> Rashmi replied to your thread on <b>Climate Change Project</b></li>
+                         <li> Arjun followed you</li>
+                         <li> Sonia shared her new project <b>Health Insights Dashboard</b></li>
+                     <li> John upvoted your <b>CampusJobs Recommender</b></li>
+                        <li> Mohit left feedback on <b>IoT Irrigation Controller</b></li>
+                              <li> Rashmi followed your profile</li>
+                         <li> Ritika published a new <b>ML-based Resume Screener</b></li>
+                     <li> New job posted: <b>Frontend Developer (Remote)</b></li>
+     </ul>
+        </div>
+
+    <script>
+    // Dynamic scroll effect for activity
+    const activityFeed = document.getElementById("activityFeed");
+    setInterval(()=>{
+      const first = activityFeed.firstElementChild;
+      if(first){
+        activityFeed.appendChild(first); // move first item to bottom
+      }
+    }, 2500); // every 2.5 seconds
+  </script>
+
+      </aside>
+    </div>
+
+  </div>
+
+  <script>
+    const projectsBtn = document.getElementById("projectsBtn");
+    const jobsBtn = document.getElementById("jobsBtn");
+    const projectsGrid = document.getElementById("projects-grid");
+    const jobsGrid = document.getElementById("jobs-grid");
+    const searchInput = document.getElementById("searchInput");
+    const tagFilter = document.getElementById("tagFilter");
+
+    function toggleView(showProjects) {
+      if(showProjects){
+        projectsBtn.classList.add("active");
+        jobsBtn.classList.remove("active");
+        projectsGrid.style.display = "grid";
+        jobsGrid.style.display = "none";
+      } else {
+        jobsBtn.classList.add("active");
+        projectsBtn.classList.remove("active");
+        jobsGrid.style.display = "grid";
+        projectsGrid.style.display = "none";
+      }
+    }
+
+    projectsBtn.addEventListener("click",()=>toggleView(true));
+    jobsBtn.addEventListener("click",()=>toggleView(false));
+
+    function filterCards() {
+      const searchText = searchInput.value.toLowerCase();
+      const selectedTag = tagFilter.value;
+      document.querySelectorAll("#projects-grid .card, #jobs-grid .card").forEach(card=>{
+        const title = card.getAttribute("data-title").toLowerCase();
+        const tags = card.getAttribute("data-tags");
+        const matchesSearch = title.includes(searchText);
+        const matchesTag = selectedTag==="all" || tags.includes(selectedTag);
+        card.style.display = (matchesSearch && matchesTag) ? "flex" : "none";
+      });
+    }
+    searchInput.addEventListener("input", filterCards);
+    tagFilter.addEventListener("change", filterCards);
+  </script>
+</body>
+</html>
