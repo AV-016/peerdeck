@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · About Us</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --elev: #151628;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --accent-2: #10c7b6;
+      --accent-3: #ff6db4;
+      --success: #28a745;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-1: 0 12px 40px rgba(0,0,0,.5);
+      --gradient: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(1000px 500px at 10% -10%, rgba(124,123,255,.25), transparent 50%),
+                  radial-gradient(1000px 500px at 90% 0%, rgba(16,199,182,.25), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1280px, 94vw); margin-inline: auto; padding: 1.2rem 0; }
+    .main-content { width: 100%; }
+
+    /* Navbar */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--panel) 90%, transparent);
+      border-bottom: 1px solid var(--stroke);
+      box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: .8rem 0; }
+    .brand-title { font-size: 1.6rem; font-weight: 800; letter-spacing: .3px; color: var(--text); }
+    .nav-links { display: flex; gap: .8rem; align-items: center; }
+    .nav-links a { padding: .5rem 1rem; border-radius: var(--radius-sm); color: var(--muted); transition: all .3s ease; }
+    .nav-links a:hover { color: var(--text); background: rgba(124,123,255,.15); transform: translateY(-2px); }
+    .user-btn { padding: .5rem 1rem; border-radius: var(--radius-sm); background: var(--gradient); color: white; font-weight: 600; cursor: pointer; transition: all .3s ease; }
+    .user-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(124,123,255,.4); }
+
+    /* About Section */
+    .about-section { padding: 1.2rem 0; }
+    h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.5rem); margin: 0 0 1rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 2px 10px rgba(124,123,255,.3); }
+    h2 { font-size: 1.5rem; font-weight: 700; margin: 1.5rem 0 .8rem; color: var(--text); }
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .team-card { border: 1px solid var(--stroke); background: linear-gradient(145deg, #121327, #0e0f1f); border-radius: var(--radius-lg); padding: 1.2rem; box-shadow: var(--shadow-1); position: relative; text-align: center; transition: transform .3s ease, box-shadow .3s ease; }
+    .team-card:hover { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(124,123,255,.3); }
+    .team-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .team-card svg { width: 100px; height: 100px; border-radius: 50%; margin-bottom: .8rem; border: 2px solid var(--accent); }
+    .team-card h3 { font-size: 1.2rem; margin: 0 0 .4rem; color: var(--text); }
+    .team-card p { font-size: .9rem; color: var(--muted); margin: 0; }
+    .mission-statement { max-width: 800px; margin: 0 auto 2rem; text-align: center; font-size: 1rem; color: var(--muted); }
+
+    /* Burger Menu */
+    .burger { display: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
+    .nav-links.active { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--panel); padding: 1rem; border-bottom: 1px solid var(--stroke); }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .team-card { animation: fadeIn 0.5s ease-out; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .nav-links.active { display: flex; }
+      .burger { display: block; }
+      .team-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 680px) {
+      .about-section { padding: 1rem 0; }
+      h1 { font-size: 1.6rem; }
+      .team-card { padding: 1rem; }
+      .container { padding: 1rem 0; }
+      .team-card svg { width: 80px; height: 80px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand-title">PeerDeck</div>
+      <div class="burger">☰</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projectcolab.html">Browse Collabs</a>
+        <a href="explore.html">Projects</a>
+        <a href="rec.html">For Recruiters</a>
+        <a class="user-btn" href="profile.html">User</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="container">
+      <h1>About PeerDeck</h1>
+      <div class="mission-statement">
+        PeerDeck is a platform dedicated to connecting students and changemakers to collaborate on impactful projects across various fields. Our mission is to empower communities by fostering creativity, teamwork, and innovation to drive real-world change.
+      </div>
+      <h2>Meet Our Team</h2>
+      <div class="team-grid">
+        <div class="team-card" aria-label="Team member Aryan Srivastava">
+          <svg width="100" height="100" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(25, 25) scale(0.8)">
+              <circle cx="125" cy="125" r="125" fill="#7c7bff"/>
+              <path d="M125,52.5c-40.9,0-74.2,33.3-74.2,74.2s33.3,74.2,74.2,74.2s74.2-33.3,74.2-74.2S165.9,52.5,125,52.5z M125,175c-26.5,0-48-21.5-48-48s21.5-48,48-48s48,21.5,48,48S151.5,175,125,175z" fill="#fff"/>
+              <path d="M90,110a10,10,0,1,0,10,10A10,10,0,0,0,90,110Zm70,0a10,10,0,1,0,10,10A10,10,0,0,0,160,110Z" fill="#333"/>
+              <path d="M140,150c0,10-10,15-15,15s-15-5-15-15" fill="none" stroke="#333" stroke-width="8"/>
+              <path d="M100,70h50v30h-50z" fill="#333"/>
+              <rect x="90" y="180" width="70" height="50" fill="#007bff"/>
+            </g>
+          </svg>
+          <h3>Aryan Srivastava</h3>
+          <p><strong>Project Lead</strong></p>
+          <p>Aryan is the visionary behind PeerDeck, leading the team with a passion for creating opportunities for students to make a difference. With a knack for strategy and innovation, he ensures PeerDeck remains a hub for impactful collaborations.</p>
+        </div>
+        <div class="team-card" aria-label="Team member Anushka Vajpayee">
+          <svg width="100" height="100" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(25, 25) scale(0.8)">
+              <circle cx="125" cy="125" r="125" fill="#10c7b6"/>
+              <path d="M125,52.5c-40.9,0-74.2,33.3-74.2,74.2s33.3,74.2,74.2,74.2s74.2-33.3,74.2-74.2S165.9,52.5,125,52.5z M125,175c-26.5,0-48-21.5-48-48s21.5-48,48-48s48,21.5,48,48S151.5,175,125,175z" fill="#fff"/>
+              <path d="M90,110a10,10,0,1,0,10,10A10,10,0,0,0,90,110Zm70,0a10,10,0,1,0,10,10A10,10,0,0,0,160,110Z" fill="#333"/>
+              <path d="M140,150c0,10-10,15-15,15s-15-5-15-15" fill="none" stroke="#333" stroke-width="8"/>
+              <path d="M80,60h90v50h-90z" fill="#555"/>
+              <rect x="90" y="180" width="70" height="50" fill="#28a745"/>
+              <circle cx="100" cy="80" r="15" fill="#333"/>
+              <circle cx="150" cy="80" r="15" fill="#333"/>
+            </g>
+          </svg>
+          <h3>Anushka Vajpayee</h3>
+          <p><strong>Developer</strong></p>
+          <p>Anushka is the coding genius who brings PeerDeck to life. Her expertise in web development ensures a seamless and engaging platform for users to connect and collaborate.</p>
+        </div>
+        <div class="team-card" aria-label="Team member Priyanshu Kumar">
+          <svg width="100" height="100" viewBox="0 0 250 250" xmlns="http://www.w3.org/2000/svg">
+            <g transform="translate(25, 25) scale(0.8)">
+              <circle cx="125" cy="125" r="125" fill="#ff6db4"/>
+              <path d="M125,52.5c-40.9,0-74.2,33.3-74.2,74.2s33.3,74.2,74.2,74.2s74.2-33.3,74.2-74.2S165.9,52.5,125,52.5z M125,175c-26.5,0-48-21.5-48-48s21.5-48,48-48s48,21.5,48,48S151.5,175,125,175z" fill="#fff"/>
+              <path d="M90,110a10,10,0,1,0,10,10A10,10,0,0,0,90,110Zm70,0a10,10,0,1,0,10,10A10,10,0,0,0,160,110Z" fill="#333"/>
+              <path d="M140,150c0,10-10,15-15,15s-15-5-15-15" fill="none" stroke="#333" stroke-width="8"/>
+              <path d="M90,60h70v40c-10-10-20-10-30,0s-20,0-30,0z" fill="#444"/>
+              <rect x="90" y="180" width="70" height="50" fill="#6a0dad"/>
+              <path d="M80,160h90v20h-90z" fill="#ffcc00"/>
+            </g>
+          </svg>
+          <h3>Priyanshu Kumar</h3>
+          <p><strong>UI/UX Designer</strong></p>
+          <p>Priyanshu crafts the intuitive and visually stunning designs that make PeerDeck a joy to use. His creative flair ensures users have a smooth and inspiring experience.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap; padding:1rem 0; color:var(--muted); font-size:.9rem;">
+      <span>© <span id="year"></span> PeerDeck</span>
+      <div style="display:flex; gap:.8rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Burger Menu Toggle
+    document.querySelector('.burger').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

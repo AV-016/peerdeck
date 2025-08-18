@@ -126,17 +126,61 @@
       <span class="see-more">See more →</span>
     </div>
 
-    <!-- Top Candidates -->
-    <h2> Top Candidates Leaderboard</h2>
-    <div class="card">
-      <ul class="leaderboard">
-        <li><span class="name">Aryan Sharma</span><span>ML / AI</span></li>
-        <li><span class="name">Ritika Verma</span><span>Full Stack</span></li>
-        <li><span class="name">John D.</span><span>IoT Engineer</span></li>
-      </ul>
-      <span class="see-more">See more →</span>
-    </div>
-
+<style>
+  :root {
+    --text: #e8eaf1;
+    --muted: #a6abc3;
+    --accent: #7c7bff;
+    --panel: #10111a;
+    --stroke: #202441;
+    --radius-lg: 14px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  .leaderboard {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .leaderboard li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .leaderboard .name {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .see-more {
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+  .see-more:hover {
+    color: var(--accent);
+  }
+</style>
+<div class="card">
+  <h2>Top Candidates Leaderboard</h2>
+  <ul class="leaderboard">
+    <li><span class="name">Aryan Sharma</span><span>ML / AI</span></li>
+    <li><span class="name">Ritika Verma</span><span>Full Stack</span></li>
+    <li><span class="name">John D.</span><span>IoT Engineer</span></li>
+  </ul>
+  <a class="see-more" href="leaderboard.html">See more →</a>
+</div>
     <!-- Recent Applications -->
     <h2> Recent Applications</h2>
     <div class="card">

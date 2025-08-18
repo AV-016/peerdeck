@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Join Collab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --elev: #151628;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --accent-2: #10c7b6;
+      --accent-3: #ff6db4;
+      --success: #28a745;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-1: 0 12px 40px rgba(0,0,0,.5);
+      --gradient: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(1000px 500px at 10% -10%, rgba(124,123,255,.25), transparent 50%),
+                  radial-gradient(1000px 500px at 90% 0%, rgba(16,199,182,.25), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1280px, 94vw); margin-inline: auto; padding: 1.5rem 0; }
+    .main-content { width: 100%; }
+
+    /* Navbar */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--panel) 90%, transparent);
+      border-bottom: 1px solid var(--stroke);
+      box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: .8rem 0; }
+    .brand-title { font-size: 1.8rem; font-weight: 800; letter-spacing: .3px; color: var(--text); }
+    .nav-links { display: flex; gap: 1rem; align-items: center; }
+    .nav-links a { padding: .6rem 1.2rem; border-radius: var(--radius-sm); color: var(--muted); transition: all .3s ease; }
+    .nav-links a:hover { color: var(--text); background: rgba(124,123,255,.15); transform: translateY(-2px); }
+    .user-btn { padding: .6rem 1.2rem; border-radius: var(--radius-sm); background: var(--gradient); color: white; font-weight: 600; cursor: pointer; transition: all .3s ease; }
+    .user-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(124,123,255,.4); animation: pulse 1.5s infinite; }
+
+    /* Tab Bar */
+    .tab-bar {
+      display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0;
+      overflow-x: auto; white-space: nowrap; padding-bottom: .5rem;
+      scrollbar-width: thin; scrollbar-color: var(--accent) var(--panel);
+    }
+    .tab-bar::-webkit-scrollbar { height: 6px; }
+    .tab-bar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .tab-bar::-webkit-scrollbar-track { background: var(--panel); }
+    .tab {
+      padding: .6rem 1.2rem; border-radius: var(--radius-sm); background: rgba(24,25,39,.8);
+      border: 1px solid var(--stroke); color: var(--muted); font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: all .3s ease;
+    }
+    .tab:hover { color: var(--text); border-color: var(--accent); transform: translateY(-2px); }
+    .tab.active { background: var(--gradient); color: white; border-color: transparent; box-shadow: 0 4px 15px rgba(124,123,255,.4); }
+
+    /* Collab Section */
+    .collab-section { padding: 2rem 0; }
+    h1 { font-size: clamp(2rem, 3.5vw + 1rem, 3rem); margin: 0 0 1.5rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 2px 10px rgba(124,123,255,.3); }
+    h2 { font-size: 1.8rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--text); }
+    .collab-card { border: 1px solid var(--stroke); background: linear-gradient(145deg, #121327, #0e0f1f); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-1); position: relative; transition: transform .3s ease, box-shadow .3s ease; }
+    .collab-card:hover { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(124,123,255,.3); }
+    .collab-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .collab-head { font-size: 1.4rem; font-weight: 700; margin-bottom: 1.2rem; }
+    label { display: block; margin: .8rem 0 .4rem; font-weight: 600; font-size: 1rem; color: var(--text); position: relative; }
+    label .tooltip { display: none; position: absolute; top: -2.5rem; left: 0; background: var(--panel); color: var(--text); padding: .5rem 1rem; border-radius: var(--radius-sm); font-size: .85rem; box-shadow: var(--shadow-1); z-index: 10; }
+    label:hover .tooltip { display: block; }
+    input, textarea {
+      width: 100%; padding: .9rem 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--stroke);
+      background: rgba(24,25,39,.8); color: var(--text); font-size: .95rem; transition: border-color .3s, box-shadow .3s;
+    }
+    input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(124,123,255,.4); outline: none; }
+    textarea { min-height: 120px; resize: vertical; }
+    .btn {
+      padding: .9rem 1.8rem; border: none; border-radius: var(--radius-sm); background: var(--success);
+      color: white; font-size: .95rem; font-weight: 600; cursor: pointer; transition: all .3s ease; box-shadow: 0 4px 15px rgba(40,167,69,.4);
+    }
+    .btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(40,167,69,.6); animation: pulse 1.5s infinite; }
+    .secondary-btn {
+      background: transparent; border: 1px solid var(--stroke); color: var(--muted);
+      box-shadow: none;
+    }
+    .secondary-btn:hover { color: var(--text); border-color: var(--accent); box-shadow: 0 4px 15px rgba(124,123,255,.3); transform: scale(1.05); }
+    .error { color: var(--accent-3); font-size: .85rem; margin-top: .3rem; display: none; animation: pulseError 0.5s ease; }
+    .pill { display: inline-flex; align-items: center; padding: .4rem .8rem; border-radius: 999px; background: rgba(124,123,255,.15); color: var(--muted); font-size: .85rem; margin: .5rem .5rem .5rem 0; }
+    .preview-card { display: none; margin-top: 1.2rem; padding: 1.2rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: var(--panel); animation: fadeIn 0.5s ease-out; }
+    .preview-card.active { display: block; }
+    .collab-details p { font-size: .95rem; color: var(--muted); margin: .5rem 0; }
+    .collab-details h3 { font-size: 1.5rem; margin: 1rem 0 .5rem; }
+    .loading-spinner { display: none; text-align: center; padding: 2rem; }
+    .loading-spinner.active { display: block; }
+    .loading-spinner::after { content: ''; width: 24px; height: 24px; border: 3px solid var(--accent); border-top-color: transparent; border-radius: 50%; display: inline-block; animation: spin 1s linear infinite; }
+    .char-counter { font-size: .85rem; color: var(--muted); margin-top: .3rem; }
+    .skills-match { font-size: .85rem; color: var(--success); margin-top: .3rem; display: none; }
+    .skills-match.active { display: block; }
+
+    /* Project Sections */
+    .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; opacity: 0; transition: opacity .5s ease, transform .5s ease; transform: translateY(10px); }
+    .project-grid.visible { display: grid; opacity: 1; transform: translateY(0); }
+    .project-grid.hidden { display: none; opacity: 0; transform: translateY(10px); }
+    .project-card { background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius-md); padding: 1.2rem; transition: transform .3s ease, box-shadow .3s ease; }
+    .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(124,123,255,.3); }
+    .project-card h3 { font-size: 1.2rem; margin: 0 0 .8rem; color: var(--text); }
+    .project-card p { font-size: .9rem; color: var(--muted); margin: .4rem 0; }
+    .progress-bar { background: var(--stroke); border-radius: 999px; height: 8px; overflow: hidden; margin: .8rem 0; }
+    .progress-bar div { background: var(--gradient); height: 100%; transition: width .5s ease; }
+    .skills-list { display: flex; flex-wrap: wrap; gap: .5rem; margin: 1rem 0; }
+    .skill-item { display: flex; align-items: center; gap: .5rem; padding: .4rem .8rem; background: rgba(124,123,255,.15); border-radius: 999px; font-size: .85rem; color: var(--muted); position: relative; }
+    .skill-item .tooltip { display: none; position: absolute; top: -2rem; left: 50%; transform: translateX(-50%); background: var(--panel); color: var(--text); padding: .4rem .8rem; border-radius: var(--radius-sm); font-size: .8rem; box-shadow: var(--shadow-1); }
+    .skill-item:hover .tooltip { display: block; }
+    .people-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 2rem 0; }
+    .person-card { background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius-md); padding: 1rem; text-align: center; transition: transform .3s ease; }
+    .person-card:hover { transform: translateY(-5px); }
+    .person-card img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: .8rem; border: 2px solid var(--accent); }
+    .person-card h4 { font-size: 1rem; margin: 0 0 .4rem; color: var(--text); }
+    .person-card p { font-size: .85rem; color: var(--muted); margin: 0; }
+
+    /* Burger Menu */
+    .burger { display: none; font-size: 1.8rem; cursor: pointer; color: var(--muted); transition: color .3s ease; }
+    .burger:hover { color: var(--accent); }
+    .nav-links.active { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--panel); padding: 1.2rem; border-bottom: 1px solid var(--stroke); }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+    @keyframes pulseError { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    .collab-card, input, textarea, .btn, .project-card, .person-card { animation: fadeIn 0.5s ease-out; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .nav-links.active { display: flex; }
+      .burger { display: block; }
+      .project-grid { grid-template-columns: 1fr; }
+      .people-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
+      .tab-bar { flex-wrap: nowrap; overflow-x: auto; }
+    }
+    @media (max-width: 680px) {
+      .collab-section { padding: 1.5rem 0; }
+      h1 { font-size: 1.8rem; }
+      h2 { font-size: 1.5rem; }
+      .collab-card { padding: 1.2rem; }
+      .container { padding: 1.2rem 0; }
+      .btn { padding: .7rem 1.2rem; font-size: .9rem; }
+      .project-card, .person-card { padding: 1rem; }
+      .tab { padding: .5rem 1rem; font-size: .85rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand-title">PeerDeck</div>
+      <div class="burger">☰</div>
+      <div class="nav-links">
+        <a href="feed.html">Feed</a>
+        <a href="explore.html">Projects</a>
+        <a href="explore.html">ProjectZone</a>
+        <a href="#recruiters">For Recruiters</a>
+        <a class="user-btn" href="profile.html">User</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Join Collab Section -->
+  <section class="collab-section">
+    <div class="container">
+      <h1>Join Our Community Impact</h1>
+      <div class="main-content">
+        <!-- Collab Details -->
+        <div class="collab-card">
+          <div class="collab-head" id="collabTitle">Loading...</div>
+          <div class="loading-spinner active" id="loadingSpinner"></div>
+          <div class="collab-details" id="collabDetails">
+            <p><strong>Category:</strong> <span id="collabCategory" aria-label="Collaboration category">N/A</span></p>
+            <p><strong>Description:</strong> <span id="collabDescription" aria-label="Collaboration description">N/A</span></p>
+            <p><strong>Location:</strong> <span id="collabLocation" aria-label="Collaboration location">N/A</span></p>
+            <p><strong>Duration:</strong> <span id="collabDuration" aria-label="Collaboration duration">N/A</span></p>
+            <p><strong>Slots:</strong> <span id="collabSlots" aria-label="Available slots">N/A</span></p>
+            <p><strong>Funding Goal:</strong> <span id="collabFunding" aria-label="Funding goal">N/A</span></p>
+            <p><strong>Tags:</strong> <span id="collabTags" aria-label="Collaboration tags">N/A</span></p>
+            <p><strong>Creator:</strong> <span id="collabCreator" aria-label="Collaboration creator">N/A</span></p>
+            <div class="pill" id="collabMeta" aria-label="Collaboration metadata">N/A</div>
+            <a href="collaboration.html" class="btn secondary-btn" id="backToCollabs" style="display: none; margin-top: 1.2rem;">Back to Collabs</a>
+          </div>
+          <!-- Skills Required -->
+          <div class="skills-required" id="skillsRequired" style="margin-top: 1.5rem;">
+            <h3>Skills Needed</h3>
+            <div class="skills-list" id="skillsList"></div>
+          </div>
+        </div>
+
+        <!-- Project Tabs -->
+        <div class="tab-bar">
+          <div class="tab" data-project="ongoingProjects">Ongoing Projects</div>
+          <div class="tab" data-project="previousProjects">Previous Projects</div>
+        </div>
+
+        <!-- Ongoing Projects -->
+        <div class="project-grid hidden" id="ongoingProjects"></div>
+
+        <!-- Previous Projects -->
+        <div class="project-grid hidden" id="previousProjects"></div>
+
+        <!-- Top Skilled People -->
+        <h2>Our Top Contributors</h2>
+        <div class="people-grid" id="topContributors"></div>
+
+        <!-- Join Form -->
+        <div class="collab-card" style="margin-top: 2rem;">
+          <div class="collab-head">Be a Changemaker!</div>
+          <form id="joinCollabForm" aria-label="Join collaboration form">
+            <div>
+              <label for="applicantName">Your Full Name <span class="tooltip">Enter your legal name</span></label>
+              <input type="text" id="applicantName" placeholder="e.g., John Doe" required aria-required="true" aria-describedby="applicantNameError">
+              <div class="error" id="applicantNameError" role="alert">Please enter your full name.</div>
+            </div>
+            <div>
+              <label for="applicantEmail">Your Email <span class="tooltip">Use an active email address</span></label>
+              <input type="email" id="applicantEmail" placeholder="e.g., john.doe@example.com" required aria-required="true" aria-describedby="applicantEmailError">
+              <div class="error" id="applicantEmailError" role="alert">Please enter a valid email address.</div>
+            </div>
+            <div>
+              <label for="applicantSkills">Your Relevant Skills <span class="tooltip">List skills matching the project needs</span></label>
+              <input type="text" id="applicantSkills" placeholder="e.g., Environmental Awareness, Teamwork" required aria-required="true" aria-describedby="applicantSkillsError skillsMatch">
+              <div class="error" id="applicantSkillsError" role="alert">Please specify your skills.</div>
+              <div class="skills-match" id="skillsMatch">Skills match: 0%</div>
+            </div>
+            <div>
+              <label for="applicantPortfolio">Portfolio Link (optional) <span class="tooltip">Share your GitHub, LinkedIn, or portfolio</span></label>
+              <input type="url" id="applicantPortfolio" placeholder="e.g., https://github.com/johndoe" aria-describedby="applicantPortfolioError">
+              <div class="error" id="applicantPortfolioError" role="alert">Please enter a valid URL.</div>
+            </div>
+            <div>
+              <label for="motivationStatement">Why Join This Collab? <span class="tooltip">Explain your motivation (100-500 characters)</span></label>
+              <textarea id="motivationStatement" placeholder="Why do you want to join this collab? (100-500 characters)" required aria-required="true" aria-describedby="motivationStatementError charCounter"></textarea>
+              <div class="char-counter" id="charCounter">0/500 characters</div>
+              <div class="error" id="motivationStatementError" role="alert">Please provide a motivation statement (100-500 characters).</div>
+            </div>
+            <div>
+              <label for="applicantResume">Your Resume (PDF, optional) <span class="tooltip">Upload a PDF resume if applicable</span></label>
+              <input type="file" id="applicantResume" accept="application/pdf" aria-describedby="applicantResumeError">
+              <div class="error" id="applicantResumeError" role="alert">Please upload a valid PDF resume.</div>
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
+              <button type="button" class="btn secondary-btn" id="previewJoinBtn" aria-label="Preview application">Preview Application</button>
+              <button type="submit" class="btn" aria-label="Submit application">Submit Application</button>
+              <button type="button" class="btn secondary-btn" id="cancelJoinBtn" aria-label="Cancel application">Cancel</button>
+            </div>
+          </form>
+          <div class="preview-card" id="joinPreview" role="region" aria-label="Application preview">
+            <h3 id="previewName">Your Application</h3>
+            <p id="previewDetails">Email, Skills, Motivation Statement</p>
+            <div class="pill" id="previewMeta">Resume: Not uploaded | Portfolio: Not provided</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap; padding:1.5rem 0; color:var(--muted); font-size:.95rem;">
+      <span>© <span id="year"></span> PeerDeck · Connecting Changemakers</span>
+      <div style="display:flex; gap:1rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mock Collab Data
+    const collabs = {
+      'eco-warriors': {
+        title: 'Eco Warriors Cleanup',
+        category: 'Environment',
+        description: 'Join us to clean up local parks and promote sustainability in Chandigarh. Volunteers will work together to remove litter, plant trees, and educate the community.',
+        location: 'Chandigarh, India',
+        duration: '2025-09-01 to 2025-10-01',
+        slots: '8/10 filled',
+        funding: '₹10,000 / ₹15,000 raised',
+        tags: 'sustainability, cleanup, community',
+        creator: 'GreenWave NGO',
+        meta: '120 Upvotes | 15 Comments',
+        skills: ['Environmental Awareness', 'Teamwork', 'Community Outreach'],
+        fundingProgress: 66,
+        slotsProgress: 80
+      },
+      'tech-tutors': {
+        title: 'Tech Tutors Workshop',
+        category: 'Education',
+        description: 'Empower youth with coding and tech skills through hands-on workshops in Mohali.',
+        location: 'Mohali, India',
+        duration: '2025-09-01 to 2025-10-15',
+        slots: '4/5 filled',
+        funding: '₹15,000 / ₹20,000 raised',
+        tags: 'education, tech',
+        creator: 'TechEd Foundation',
+        meta: '85 Upvotes | 10 Comments',
+        skills: ['Coding', 'Teaching', 'Python'],
+        fundingProgress: 75,
+        slotsProgress: 80
+      },
+      'health-heroes': {
+        title: 'Health Heroes Camp',
+        category: 'Health',
+        description: 'Provide health education and free checkups in underserved communities in Delhi.',
+        location: 'Delhi, India',
+        duration: '2025-09-01 to 2025-09-15',
+        slots: '6/8 filled',
+        funding: '₹8,000 / ₹12,000 raised',
+        tags: 'health, community',
+        creator: 'HealthCare NGO',
+        meta: '95 Upvotes | 12 Comments',
+        skills: ['Medical Knowledge', 'Communication', 'Empathy'],
+        fundingProgress: 66,
+        slotsProgress: 75
+      }
+    };
+
+    // Mock Ongoing and Previous Projects
+    const ongoingProjects = Object.values(collabs);
+    const previousProjects = [
+      {
+        title: 'River Revival 2024',
+        category: 'Environment',
+        impact: 'Cleaned 5km of riverbank, planted 200 trees',
+        location: 'Punjab, India',
+        duration: '2024-06-01 to 2024-07-01',
+        funding: '₹25,000 raised',
+        creator: 'GreenWave NGO'
+      },
+      {
+        title: 'Code for Kids',
+        category: 'Education',
+        impact: 'Taught 150 kids basic coding skills',
+        location: 'Mohali, India',
+        duration: '2024-03-01 to 2024-04-15',
+        funding: '₹18,000 raised',
+        creator: 'TechEd Foundation'
+      }
+    ];
+
+    // Mock Top Contributors
+    const topContributors = [
+      { name: 'Aarav Sharma', skills: 'Environmental Advocacy, Leadership', contributions: 'Led 3 cleanups', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&h=80&q=80' },
+      { name: 'Priya Patel', skills: 'Coding, Teaching', contributions: 'Taught 100+ students', avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&h=80&q=80' },
+      { name: 'Vikram Singh', skills: 'Medical Training, Community Outreach', contributions: 'Organized 5 health camps', avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-4.0.3&auto=format&fit=crop&w=80&h=80&q=80' }
+    ];
+
+    // Load Collab Details
+    function loadCollabDetails() {
+      const spinner = document.getElementById('loadingSpinner');
+      const details = document.getElementById('collabDetails');
+      const backBtn = document.getElementById('backToCollabs');
+      const skillsList = document.getElementById('skillsList');
+      spinner.classList.add('active');
+      details.style.display = 'none';
+      skillsList.style.display = 'none';
+
+      setTimeout(() => { // Simulate async data fetch
+        const params = new URLSearchParams(window.location.search);
+        const collabId = params.get('collab');
+        const collab = collabs[collabId];
+
+        spinner.classList.remove('active');
+        details.style.display = 'block';
+
+        if (collab) {
+          document.getElementById('collabTitle').textContent = collab.title;
+          document.getElementById('collabCategory').textContent = collab.category;
+          document.getElementById('collabDescription').textContent = collab.description;
+          document.getElementById('collabLocation').textContent = collab.location;
+          document.getElementById('collabDuration').textContent = collab.duration;
+          document.getElementById('collabSlots').textContent = collab.slots;
+          document.getElementById('collabFunding').textContent = collab.funding;
+          document.getElementById('collabTags').textContent = collab.tags;
+          document.getElementById('collabCreator').textContent = collab.creator;
+          document.getElementById('collabMeta').textContent = collab.meta;
+          skillsList.innerHTML = collab.skills.map(skill => `
+            <span class="skill-item">
+              <i class="fas fa-check-circle"></i> ${skill}
+              <span class="tooltip">${skill} expertise needed</span>
+            </span>
+          `).join('');
+          skillsList.style.display = 'flex';
+        } else {
+          document.getElementById('collabTitle').textContent = 'Collab Not Found';
+          document.getElementById('collabDetails').innerHTML = '<p>No details available for this collaboration.</p>';
+          backBtn.style.display = 'block';
+          skillsList.style.display = 'none';
+        }
+      }, 500); // Mock delay for loading
+    }
+
+    // Load Ongoing Projects
+    function loadOngoingProjects() {
+      const ongoingProjectsDiv = document.getElementById('ongoingProjects');
+      ongoingProjectsDiv.innerHTML = ongoingProjects.map(project => `
+        <div class="project-card">
+          <h3>${project.title}</h3>
+          <p><strong>Category:</strong> ${project.category}</p>
+          <p>${project.description.slice(0, 100)}...</p>
+          <p><strong>Location:</strong> ${project.location}</p>
+          <p><strong>Progress:</strong></p>
+          <div class="progress-bar"><div style="width: ${project.fundingProgress}%"></div></div>
+          <p><strong>Slots:</strong> ${project.slots}</p>
+          <div class="progress-bar"><div style="width: ${project.slotsProgress}%"></div></div>
+        </div>
+      `).join('');
+    }
+
+    // Load Previous Projects
+    function loadPreviousProjects() {
+      const previousProjectsDiv = document.getElementById('previousProjects');
+      previousProjectsDiv.innerHTML = previousProjects.map(project => `
+        <div class="project-card">
+          <h3>${project.title}</h3>
+          <p><strong>Category:</strong> ${project.category}</p>
+          <p><strong>Impact:</strong> ${project.impact}</p>
+          <p><strong>Location:</strong> ${project.location}</p>
+          <p><strong>Duration:</strong> ${project.duration}</p>
+          <p><strong>Funding:</strong> ${project.funding}</p>
+        </div>
+      `).join('');
+    }
+
+    // Load Top Contributors
+    function loadTopContributors() {
+      const topContributorsDiv = document.getElementById('topContributors');
+      topContributorsDiv.innerHTML = topContributors.map(person => `
+        <div class="person-card">
+          <img src="${person.avatar}" alt="${person.name}'s avatar">
+          <h4>${person.name}</h4>
+          <p><strong>Skills:</strong> ${person.skills}</p>
+          <p><strong>Contributions:</strong> ${person.contributions}</p>
+        </div>
+      `).join('');
+    }
+
+    // Toggle Project Grids
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const projectId = tab.getAttribute('data-project');
+        const projectGrid = document.getElementById(projectId);
+        const isHidden = projectGrid.classList.contains('hidden');
+
+        // Toggle visibility
+        projectGrid.classList.toggle('visible', isHidden);
+        projectGrid.classList.toggle('hidden', !isHidden);
+        tab.classList.toggle('active', isHidden);
+      });
+    });
+
+    // Join Collab Form
+    const joinForm = document.getElementById('joinCollabForm');
+    const previewJoinBtn = document.getElementById('previewJoinBtn');
+    const cancelJoinBtn = document.getElementById('cancelJoinBtn');
+    const joinPreview = document.getElementById('joinPreview');
+    const motivationInput = document.getElementById('motivationStatement');
+    const charCounter = document.getElementById('charCounter');
+    const skillsInput = document.getElementById('applicantSkills');
+    const skillsMatch = document.getElementById('skillsMatch');
+
+    function validateField(field, errorId, condition, errorMsg) {
+      const error = document.getElementById(errorId);
+      if (condition) {
+        error.style.display = 'block';
+        error.textContent = errorMsg;
+        return false;
+      }
+      error.style.display = 'none';
+      return true;
+    }
+
+    function calculateSkillsMatch(inputSkills) {
+      const params = new URLSearchParams(window.location.search);
+      const collabId = params.get('collab');
+      const collab = collabs[collabId];
+      if (!collab) return 0;
+      const requiredSkills = collab.skills.map(s => s.toLowerCase());
+      const userSkills = inputSkills.toLowerCase().split(',').map(s => s.trim());
+      const matchedSkills = userSkills.filter(s => requiredSkills.includes(s));
+      return Math.round((matchedSkills.length / requiredSkills.length) * 100);
+    }
+
+    function validateForm() {
+      const name = document.getElementById('applicantName').value.trim();
+      const email = document.getElementById('applicantEmail').value.trim();
+      const skills = skillsInput.value.trim();
+      const portfolio = document.getElementById('applicantPortfolio').value.trim();
+      const motivation = motivationInput.value.trim();
+      const resume = document.getElementById('applicantResume').files[0];
+
+      const isValid = [
+        validateField('applicantName', 'applicantNameError', !name, 'Please enter your full name.'),
+        validateField('applicantEmail', 'applicantEmailError', !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email), 'Please enter a valid email address.'),
+        validateField('applicantSkills', 'applicantSkillsError', !skills, 'Please specify your skills.'),
+        validateField('applicantPortfolio', 'applicantPortfolioError', portfolio && !/^https?:\/\/.+/.test(portfolio), 'Please enter a valid URL.'),
+        validateField('motivationStatement', 'motivationStatementError', !motivation || motivation.length < 100 || motivation.length > 500, 'Please provide a motivation statement (100-500 characters).'),
+        validateField('applicantResume', 'applicantResumeError', resume && resume.type !== 'application/pdf', 'Please upload a valid PDF resume.')
+      ].every(v => v);
+
+      if (skills) {
+        const matchPercentage = calculateSkillsMatch(skills);
+        skillsMatch.textContent = `Skills match: ${matchPercentage}%`;
+        skillsMatch.style.color = matchPercentage >= 70 ? 'var(--success)' : 'var(--accent-3)';
+        skillsMatch.classList.add('active');
+      } else {
+        skillsMatch.classList.remove('active');
+      }
+
+      return { valid: isValid, name, email, skills, portfolio, motivation, resume };
+    }
+
+    // Real-time Validation
+    ['applicantName', 'applicantEmail', 'applicantSkills', 'applicantPortfolio', 'motivationStatement'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        validateForm();
+      });
+    });
+
+    // Character Counter
+    motivationInput.addEventListener('input', () => {
+      const length = motivationInput.value.length;
+      charCounter.textContent = `${length}/500 characters`;
+      charCounter.style.color = length < 100 || length > 500 ? 'var(--accent-3)' : 'var(--muted)';
+    });
+
+    previewJoinBtn.addEventListener('click', () => {
+      const { valid, name, email, skills, portfolio, motivation, resume } = validateForm();
+      if (valid) {
+        document.getElementById('previewName').textContent = name;
+        document.getElementById('previewDetails').innerHTML = `
+          Email: ${email}<br>
+          Skills: ${skills}<br>
+          Portfolio: ${portfolio || 'Not provided'}<br>
+          Motivation: ${motivation.slice(0, 100)}${motivation.length > 100 ? '...' : ''}
+        `;
+        document.getElementById('previewMeta').textContent = `Resume: ${resume ? resume.name : 'Not uploaded'} | Skills Match: ${calculateSkillsMatch(skills)}%`;
+        joinPreview.classList.add('active');
+      }
+    });
+
+    cancelJoinBtn.addEventListener('click', () => {
+      joinForm.reset();
+      joinPreview.classList.remove('active');
+      skillsMatch.classList.remove('active');
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      charCounter.textContent = '0/500 characters';
+      charCounter.style.color = 'var(--muted)';
+      window.location.href = 'collaboration.html';
+    });
+
+    joinForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const { valid, name, email, skills, portfolio, motivation, resume } = validateForm();
+      if (valid) {
+        const formData = new FormData();
+        formData.append('collabId', new URLSearchParams(window.location.search).get('collab') || 'unknown');
+        formData.append('name', name);
+        formData.append('email', email);
+        formData.append('skills', skills);
+        formData.append('portfolio', portfolio);
+        formData.append('motivation', motivation);
+        if (resume) formData.append('resume', resume);
+
+        try {
+          // Mock API call
+          await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+          alert('Application submitted successfully! You will be notified of the status.');
+          joinForm.reset();
+          joinPreview.classList.remove('active');
+          skillsMatch.classList.remove('active');
+          document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+          charCounter.textContent = '0/500 characters';
+          charCounter.style.color = 'var(--muted)';
+          window.location.href = 'collaboration.html#requested-collabs';
+        } catch (error) {
+          alert('Error submitting application. Please try again.');
+        }
+      }
+    });
+
+    // Burger Menu Toggle
+    document.querySelector('.burger').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+
+    // Load All Content on Page Load
+    window.addEventListener('load', () => {
+      loadCollabDetails();
+      loadOngoingProjects();
+      loadPreviousProjects();
+      loadTopContributors();
+    });
+  </script>
+</body>
+</html>

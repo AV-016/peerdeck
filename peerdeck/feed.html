@@ -95,30 +95,44 @@
 
       <!-- ================= Local Feed ================= -->
       <div id="local-feed">
-        <article class="card">
-          <div class="post-header">
-            <div class="user-info">
-              <div class="avatar">RK</div>
-              <div>
-                <div class="username">Ritika K.</div>
-                <div class="time">1h ago</div>
-              </div>
-            </div>
-            <span class="tag">Internship</span>
-          </div>
-          <div class="post-content">
-            Company near CU hiring ML interns. Show 1 course-backed ML project to apply.
-          </div>
-          <div class="post-footer">
-            <div class="vote-btns">
-              <button class="vote-btn">⬆ 120</button>
-              <button class="vote-btn">⬇ 5</button>
-            </div>
-            <div class="tags"><span class="tag">ML</span><span class="tag">Python</span></div>
-          </div>
-          <span class="know-more">Know more →</span>
-        </article>
+       <article class="card">
+  <div class="post-header">
+    <div class="user-info">
+      <div class="avatar">RK</div>
+      <div>
+        <div class="username">Ritika K.</div>
+        <div class="time">1h ago</div>
+      </div>
+    </div>
+    <span class="tag">Internship</span>
+  </div>
+  <div class="post-content">
+    Company near CU hiring ML interns. Show 1 course-backed ML project to apply.
+  </div>
+  <div class="post-footer">
+    <div class="vote-btns">
+      <button class="vote-btn upvote">⬆ 120</button>
+      <button class="vote-btn downvote">⬇ 5</button>
+    </div>
+    <div class="tags"><span class="tag">ML</span><span class="tag">Python</span></div>
+  </div>
+  <a class="know-more" href="projectdetail.html">Know more →</a>
+</article>
 
+<style>
+  .vote-btn:active { transform: scale(0.95); }
+</style>
+
+<script>
+  document.querySelectorAll('.vote-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const isUpvote = button.classList.contains('upvote');
+      const currentText = button.textContent;
+      const currentCount = parseInt(currentText.match(/\d+/)[0]);
+      button.textContent = `${isUpvote ? '⬆' : '⬇'} ${currentCount + 1}`;
+    });
+  });
+</script>
         <article class="card">
           <div class="post-header">
             <div class="user-info">
