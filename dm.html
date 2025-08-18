@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Messages</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --success: #2fd17b;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin-inline: auto; padding: 2rem 0; }
+
+    /* Navbar */
+    .nav { background: var(--panel); border-bottom: 1px solid var(--stroke); }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: .8rem 0; }
+    .brand { font-weight: 700; }
+    .nav-links { display: flex; gap: 1rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; padding: .5rem .9rem; border-radius: 10px; }
+    .nav-links a:hover { color: var(--text); background: #0f1020; }
+
+    /* Messages Section */
+    .messages-section { display: flex; gap: 1.5rem; height: calc(100vh - 150px); }
+    .sidebar { width: 300px; background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: 1rem; overflow-y: auto; }
+    .chat-area { flex: 1; background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius-lg); display: flex; flex-direction: column; }
+    .user-list { list-style: none; margin: 0; padding: 0; }
+    .user-item { display: flex; align-items: center; gap: .8rem; padding: .8rem; border-bottom: 1px solid var(--stroke); cursor: pointer; transition: background 0.2s; }
+    .user-item:hover, .user-item.active { background: #1a1b31; }
+    .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: #2c2f4a; display: flex; align-items: center; justify-content: center; font-size: .9rem; font-weight: 600; }
+    .user-name { font-weight: 600; font-size: .9rem; }
+    .user-status { font-size: .8rem; color: var(--muted); }
+    .chat-header { padding: 1rem; border-bottom: 1px solid var(--stroke); display: flex; align-items: center; gap: .8rem; }
+    .chat-messages { flex: 1; padding: 1rem; overflow-y: auto; display: flex; flex-direction: column; gap: .8rem; }
+    .message { max-width: 70%; padding: .8rem 1rem; border-radius: var(--radius-md); font-size: .9rem; }
+    .message.sent { background: var(--accent); color: #fff; align-self: flex-end; }
+    .message.received { background: #1a1b31; color: var(--text); align-self: flex-start; }
+    .message-timestamp { font-size: .75rem; color: var(--muted); margin-top: .2rem; }
+    .chat-input { display: flex; gap: .5rem; padding: 1rem; border-top: 1px solid var(--stroke); }
+    .chat-input input { flex: 1; padding: .8rem; border-radius: 999px; border: 1px solid var(--stroke); background: #0f1020; color: var(--text); font-size: .9rem; }
+    .chat-input button { padding: .8rem 1.2rem; border-radius: 999px; border: none; background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+    .chat-input button:hover { transform: scale(1.05); }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--stroke); padding: 1.4rem 0; color: var(--muted); }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .container { width: min(100%, 92vw); }
+      .nav-links { display: none; }
+      .messages-section { flex-direction: column; height: auto; }
+      .sidebar { width: 100%; max-height: 200px; }
+      .chat-area { height: 500px; }
+    }
+    @media (max-width: 680px) {
+      .chat-input { flex-direction: column; }
+      .chat-input button { padding: .6rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">PeerDeck</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="feed.html">Feed</a>
+        <a href="explore.html">Explore</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Messages Section -->
+  <section class="messages-section container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <ul class="user-list">
+        <li class="user-item active" data-user="sonia">
+          <div class="user-avatar">SP</div>
+          <div>
+            <div class="user-name">Sonia P.</div>
+            <div class="user-status">Online</div>
+          </div>
+        </li>
+        <li class="user-item" data-user="aryan">
+          <div class="user-avatar">AS</div>
+          <div>
+            <div class="user-name">Aryan S.</div>
+            <div class="user-status">Last seen 2h ago</div>
+          </div>
+        </li>
+        <li class="user-item" data-user="mohit">
+          <div class="user-avatar">MK</div>
+          <div>
+            <div class="user-name">Mohit K.</div>
+            <div class="user-status">Last seen 1d ago</div>
+          </div>
+        </li>
+        <li class="user-item" data-user="arjun">
+          <div class="user-avatar">AK</div>
+          <div>
+            <div class="user-name">Arjun K.</div>
+            <div class="user-status">Online</div>
+          </div>
+        </li>
+        <li class="user-item" data-user="john">
+          <div class="user-avatar">JD</div>
+          <div>
+            <div class="user-name">John D.</div>
+            <div class="user-status">Last seen 5h ago</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="user-avatar">SP</div>
+        <div class="user-name">Sonia P.</div>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="message received">
+          Hey! I saw your HealthTrack+ App project on PeerDeck. It's impressive! 😊
+          <div class="message-timestamp">7h ago</div>
+        </div>
+        <div class="message sent">
+          Thanks! We built it during the Global Health Hackathon. Would love to hear your feedback!
+          <div class="message-timestamp">6h ago</div>
+        </div>
+        <div class="message received">
+          The wearable integration is cool! Have you considered adding sleep tracking?
+          <div class="message-timestamp">5h ago</div>
+        </div>
+        <div class="message sent">
+          Great idea! We're planning to add sleep tracking in the next iteration. Stay tuned!
+          <div class="message-timestamp">4h ago</div>
+        </div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="message-input" placeholder="Type a message..." />
+        <button id="send-message">Send</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap">
+      <div style="display:flex; align-items:center; gap:.6rem">
+        <div class="avatar" style="width:24px; height:24px; border-radius:8px; background:conic-gradient(from 60deg, var(--accent), #10c7b6, #ff6db4, var(--accent));"></div>
+        <span>© <span id="year"></span> PeerDeck</span>
+      </div>
+      <div style="display:flex; gap:1rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    const users = {
+      sonia: [
+        { text: "Hey! I saw your HealthTrack+ App project on PeerDeck. It's impressive! 😊", sender: "received", time: "7h ago" },
+        { text: "Thanks! We built it during the Global Health Hackathon. Would love to hear your feedback!", sender: "sent", time: "6h ago" },
+        { text: "The wearable integration is cool! Have you considered adding sleep tracking?", sender: "received", time: "5h ago" },
+        { text: "Great idea! We're planning to add sleep tracking in the next iteration. Stay tuned!", sender: "sent", time: "4h ago" },
+      ],
+      aryan: [
+        { text: "Hi Aryan, your ML Recommender is awesome! How did you handle the dataset?", sender: "sent", time: "1d ago" },
+        { text: "Thanks! We used a TF-IDF model with student profiles. Happy to share details!", sender: "received", time: "1d ago" },
+      ],
+      mohit: [
+        { text: "Mohit, your AI Content Filter is inspiring. Any plans to open-source it?", sender: "sent", time: "2d ago" },
+        { text: "Appreciating the support! Yes, planning to open-source it soon.", sender: "received", time: "2d ago" },
+      ],
+      arjun: [
+        { text: "Arjun, the Smart Farming IoT project is so cool! Can we collaborate?", sender: "sent", time: "3h ago" },
+        { text: "Absolutely, let's discuss! What's your expertise?", sender: "received", time: "2h ago" },
+      ],
+      john: [
+        { text: "John, loved your NGO Volunteering Portal. How's the user adoption?", sender: "sent", time: "5h ago" },
+        { text: "Thanks! We've got 12 NGOs onboard already!", sender: "received", time: "4h ago" },
+      ],
+    };
+
+    const userItems = document.querySelectorAll('.user-item');
+    const chatMessages = document.getElementById('chat-messages');
+    const chatHeader = document.querySelector('.chat-header');
+    const messageInput = document.getElementById('message-input');
+    const sendButton = document.getElementById('send-message');
+
+    function renderMessages(user) {
+      chatMessages.innerHTML = '';
+      const messages = users[user] || [];
+      messages.forEach(msg => {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${msg.sender}`;
+        messageDiv.innerHTML = `${msg.text}<div class="message-timestamp">${msg.time}</div>`;
+        chatMessages.appendChild(messageDiv);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      const userName = document.querySelector(`.user-item[data-user="${user}"] .user-name`).textContent;
+      chatHeader.innerHTML = `<div class="user-avatar">${userName[0]}</div><div class="user-name">${userName}</div>`;
+    }
+
+    userItems.forEach(item => {
+      item.addEventListener('click', () => {
+        userItems.forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        const user = item.getAttribute('data-user');
+        renderMessages(user);
+      });
+    });
+
+    sendButton.addEventListener('click', () => {
+      const messageText = messageInput.value.trim();
+      if (messageText) {
+        const activeUser = document.querySelector('.user-item.active').getAttribute('data-user');
+        users[activeUser].push({ text: messageText, sender: 'sent', time: 'Just now' });
+        renderMessages(activeUser);
+        messageInput.value = '';
+      }
+    });
+
+    messageInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        sendButton.click();
+      }
+    });
+
+    // Initialize with Sonia's chat
+    renderMessages('sonia');
+  </script>
+</body>
+</html>

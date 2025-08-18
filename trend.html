@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · AI-Content Filter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --success: #2fd17b;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,123,255,.2), transparent 50%),
+                  radial-gradient(1200px 600px at 90% 0%, rgba(16,199,182,.2), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin-inline: auto; padding: 2rem 0; display: flex; gap: 2rem; }
+    .main-content { flex: 1; }
+    .sidebar { width: 300px; }
+    .nav { background: var(--panel); border-bottom: 1px solid var(--stroke); }
+    .nav-inner { display: flex; justify-content: space-between; align-items: center; padding: .8rem 0; }
+    .brand { font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+    .nav-links { display: flex; gap: 1rem; }
+    .nav-links a { color: var(--muted); text-decoration: none; padding: .5rem .9rem; border-radius: 10px; }
+    .nav-links a:hover { color: var(--text); background: #0f1020; }
+    .project-section { padding: 3rem 0; }
+    .project-header { margin-bottom: 2rem; }
+    .project-title { font-size: 2rem; font-weight: 700; margin: 0; }
+    .project-meta { font-size: .9rem; color: var(--muted); margin: .5rem 0; }
+    .card { background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-1); margin-bottom: 1.5rem; transition: transform 0.2s; }
+    .card:hover { transform: translateY(-5px); }
+    .section-title { font-size: 1.4rem; font-weight: 600; margin: 1.5rem 0 .5rem; }
+    .project-desc { font-size: .9rem; color: var(--muted); max-width: 60ch; }
+    .tags { display: flex; gap: .5rem; flex-wrap: wrap; margin: .5rem 0; }
+    .tag { font-size: .75rem; background: #1a1b31; padding: .2rem .5rem; border-radius: 999px; color: var(--muted); }
+    .team-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+    .team-member { display: flex; align-items: center; gap: 1rem; }
+    .member-avatar { width: 40px; height: 40px; border-radius: 50%; background: #2c2f4a; display: flex; align-items: center; justify-content: center; font-size: .9rem; font-weight: 600; }
+    .member-name { font-weight: 600; }
+    .btn { display: inline-flex; align-items: center; justify-content: center; padding: .7rem 1.2rem; border-radius: 12px; border: 1px solid var(--stroke); background: linear-gradient(180deg, #1a1b31, #121327); color: var(--text); font-weight: 600; cursor: pointer; transition: transform 0.2s, background 0.2s; }
+    .btn:hover { background: var(--accent); border-color: var(--accent); transform: scale(1.05); }
+    .btn.star { background: linear-gradient(180deg, color-mix(in srgb, var(--success) 40%, #193128), #0f1f17); border-color: #1f4e3a; }
+    .image-carousel { display: flex; gap: 1rem; overflow-x: auto; padding-bottom: .5rem; margin-bottom: 1.5rem; }
+    .carousel-item { width: 300px; height: 180px; background: #1a1b31; border-radius: var(--radius-md); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: .9rem; }
+    .comments-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+    .comment { padding: .8rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: #0f1020; }
+    .comment-header { display: flex; align-items: center; gap: .8rem; margin-bottom: .5rem; }
+    .comment-text { font-size: .9rem; color: var(--muted); }
+    .comment-timestamp { font-size: .75rem; color: var(--muted); }
+    .comment-input { display: flex; gap: .5rem; margin-top: 1rem; }
+    .comment-input input { flex: 1; padding: .8rem; border-radius: 999px; border: 1px solid var(--stroke); background: #0f1020; color: var(--text); font-size: .9rem; }
+    .comment-input button { padding: .8rem 1.2rem; border-radius: 999px; border: none; background: var(--accent); color: #fff; font-weight: 600; cursor: pointer; }
+    .milestone-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+    .milestone { display: flex; align-items: center; gap: 1rem; }
+    .milestone-date { font-size: .9rem; color: var(--muted); width: 120px; }
+    .milestone-desc { font-size: .9rem; font-weight: 600; }
+    .related-project { display: flex; justify-content: space-between; align-items: center; padding: .8rem; border-bottom: 1px solid var(--stroke); }
+    .related-project:last-child { border-bottom: none; }
+    footer { border-top: 1px solid var(--stroke); padding: 1.4rem 0; color: var(--muted); }
+    @media (max-width: 960px) {
+      .container { width: min(100%, 92vw); flex-direction: column; }
+      .nav-links { display: none; }
+      .sidebar { width: 100%; }
+    }
+    @media (max-width: 680px) {
+      .project-section { padding: 2rem 0; }
+      .image-carousel { flex-direction: column; }
+      .carousel-item { width: 100%; }
+      .comment-input { flex-direction: column; }
+      .comment-input button { padding: .6rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand">PeerDeck</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="index.html">Dashboard</a>
+        <a href="repo.html">View Repository</a>
+        <a href="explore.html">Jobs</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Project Section -->
+  <section class="project-section">
+    <div class="container">
+      <div class="main-content">
+        <div class="project-header">
+          <h1 class="project-title">AI-Content Filter</h1>
+          <div class="project-meta">Trending Position: #1 · Posted 2 days ago · 820 Upvotes</div>
+          <div class="tags">
+            <span class="tag">AI</span>
+            <span class="tag">NLP</span>
+            <span class="tag">TensorFlow</span>
+            <span class="tag">Research</span>
+          </div>
+          <div style="display: flex; gap: .8rem; margin-top: 1rem;">
+            <button class="btn star">Star Project (150)</button>
+            <a class="btn" href="dm.html">Contact Team</a>
+            <button class="btn">Share Project</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Screenshots</div>
+          <div class="image-carousel">
+            <div class="carousel-item">Dashboard Interface</div>
+            <div class="carousel-item">Model Performance Graph</div>
+            <div class="carousel-item">Content Analysis UI</div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Description</div>
+          <p class="project-desc">The AI-Content Filter is an innovative solution to maintain content authenticity on platforms like PeerDeck. Using a TensorFlow-based NLP model, it detects AI-generated text by analyzing linguistic patterns, achieving high accuracy. Developed by Team Orion during an NLP course, this project enhances trust in user-generated content by identifying synthetic posts and enabling moderators to take action.</p>
+        </div>
+        <div class="card">
+          <div class="section-title">Team Members</div>
+          <ul class="team-list">
+            <li class="team-member">
+              <div class="member-avatar">AS</div>
+              <a class="member-name" href="userprofile.html">Aryan Srivastava</a>
+            </li>
+            <li class="team-member">
+              <div class="member-avatar">AV</div>
+              <a class="member-name" href="userprofile.html">Anushka Vajpayee</a>
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="section-title">Milestones</div>
+          <ul class="milestone-list">
+            <li class="milestone">
+              <div class="milestone-date">Aug 1, 2025</div>
+              <div class="milestone-desc">Initial prototype developed</div>
+            </li>
+            <li class="milestone">
+              <div class="milestone-date">Aug 10, 2025</div>
+              <div class="milestone-desc">Model training completed</div>
+            </li>
+            <li class="milestone">
+              <div class="milestone-date">Aug 15, 2025</div>
+              <div class="milestone-desc">Submitted to NLP Course Hackathon</div>
+            </li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="section-title">Comments</div>
+          <ul class="comments-list">
+            <li class="comment">
+              <div class="comment-header">
+                <div class="member-avatar">SP</div>
+                <a class="member-name" href="profile-sonia.html">Sonia P.</a>
+                <div class="comment-timestamp">1 day ago</div>
+              </div>
+              <div class="comment-text">This is a game-changer for content moderation! Have you tested it on multilingual datasets?</div>
+            </li>
+            <li class="comment">
+              <div class="comment-header">
+                <div class="member-avatar">JD</div>
+                <a class="member-name" href="profile-john.html">John D.</a>
+                <div class="comment-timestamp">12 hours ago</div>
+              </div>
+              <div class="comment-text">Impressive accuracy! Any plans to open-source the model?</div>
+            </li>
+          </ul>
+          <div class="comment-input">
+            <input type="text" id="comment-input" placeholder="Add a comment..." />
+            <button id="post-comment">Post</button>
+          </div>
+        </div>
+      </div>
+      <aside class="sidebar">
+        <div class="card">
+          <div class="section-title">Related Projects</div>
+          <div class="related-project">
+            <span><a href="project-healthtrack-app.html">HealthTrack+ App</a></span>
+            <span>⭐ 1200</span>
+          </div>
+          <div class="related-project">
+            <span><a href="project-campusjobs-recommender.html">CampusJobs ML Recommender</a></span>
+            <span>⭐ 420</span>
+          </div>
+          <div class="related-project">
+            <span><a href="project-smart-farming.html">Smart Farming IoT</a></span>
+            <span>⭐ 600</span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap">
+      <div style="display:flex; align-items:center; gap:.6rem">
+        <div style="width:24px; height:24px; border-radius:8px; background:conic-gradient(from 60deg, var(--accent), #10c7b6, #ff6db4, var(--accent));"></div>
+        <span>© <span id="year"></span> PeerDeck</span>
+      </div>
+      <div style="display:flex; gap:1rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+    document.getElementById('post-comment').addEventListener('click', () => {
+      const input = document.getElementById('comment-input');
+      const text = input.value.trim();
+      if (text) {
+        const commentList = document.querySelector('.comments-list');
+        const newComment = document.createElement('li');
+        newComment.className = 'comment';
+        newComment.innerHTML = `
+          <div class="comment-header">
+            <div class="member-avatar">YOU</div>
+            <span class="member-name">You</span>
+            <div class="comment-timestamp">Just now</div>
+          </div>
+          <div class="comment-text">${text}</div>
+        `;
+        commentList.appendChild(newComment);
+        input.value = '';
+      }
+    });
+    document.getElementById('comment-input').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        document.getElementById('post-comment').click();
+      }
+    });
+    document.querySelector('.btn.star').addEventListener('click', function() {
+      const count = parseInt(this.textContent.match(/\d+/)[0]);
+      this.textContent = `Star Project (${count + 1})`;
+    });
+  </script>
+</body>
+</html>

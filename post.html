@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Post Your Project</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0b0b12 0%, #16162a 100%);
+      --panel: #10111a;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --radius-lg: 14px;
+    }
+    body {margin:0; font-family:Inter,sans-serif; background:var(--bg-gradient); color:var(--text);}
+    .container {width:min(950px,92vw); margin-inline:auto; padding:2rem;}
+    .card {
+      background:var(--panel); border:1px solid var(--stroke); border-radius:var(--radius-lg);
+      padding:2rem; margin-top:1.5rem; box-shadow:0 4px 12px rgba(0,0,0,0.4);
+    }
+    h1 {margin-bottom:1rem;}
+    label {display:block; margin:.6rem 0 .3rem; font-weight:600;}
+    input, textarea, select {
+      width:100%; padding:.7rem 1rem; border-radius:10px;
+      border:1px solid var(--stroke); background:#181927; color:var(--text); font-size:1rem;
+    }
+    textarea {min-height:100px; resize:vertical;}
+    .checkbox-group {display:flex; flex-wrap:wrap; gap:1rem; margin-top:.5rem;}
+    .checkbox-group label {font-weight:400;}
+    button {
+      margin-top:1.5rem; padding:.9rem 1.5rem; border:none; border-radius:10px;
+      background:var(--accent); color:white; font-size:1rem; font-weight:600; cursor:pointer; transition:.2s;
+    }
+    button:hover {opacity:.9; transform:translateY(-2px);}
+    .user-header {display:flex; align-items:center; gap:1rem; margin-bottom:1rem;}
+    .avatar {width:45px; height:45px; border-radius:50%; background:#2c2f4a; display:flex; align-items:center; justify-content:center; font-size:1.2rem; font-weight:600;}
+    .username {font-weight:600;}
+    .preview {margin-top:2.5rem;}
+    .preview-card {
+      background:#181927; padding:1.2rem; border-radius:var(--radius-lg); border:1px solid var(--stroke);
+      box-shadow:0 4px 8px rgba(0,0,0,0.3); transition:.3s;
+    }
+    .preview-card:hover {transform:translateY(-3px);}
+    .post-header {display:flex; justify-content:space-between; align-items:center; margin-bottom:.8rem;}
+    .post-user {display:flex; align-items:center; gap:.6rem;}
+    .post-avatar {width:38px; height:38px; border-radius:50%; background:#2c2f4a; display:flex; align-items:center; justify-content:center; font-size:.9rem; font-weight:600;}
+    .post-username {font-weight:600;}
+    .post-time {font-size:.8rem; color:var(--muted);}
+    .post-tag {font-size:.75rem; background:#1a1b31; padding:.2rem .6rem; border-radius:999px; color:var(--muted);}
+    .post-content {margin:.6rem 0; font-size:.95rem; line-height:1.5;}
+    .tags {display:flex; gap:.5rem; flex-wrap:wrap; margin-top:.6rem;}
+    .tag {font-size:.75rem; background:#1a1b31; padding:.2rem .5rem; border-radius:999px; color:var(--muted);}
+    .links {margin-top:.8rem; display:flex; gap:.6rem; flex-wrap:wrap;}
+    .link-btn {padding:.3rem .7rem; border-radius:8px; border:1px solid var(--stroke); background:transparent; color:var(--accent); font-size:.8rem; text-decoration:none;}
+    .extra-info {margin-top:.8rem; font-size:.85rem; color:var(--muted);}
+    .preview-img {margin-top:1rem; max-width:100%; border-radius:10px; border:1px solid var(--stroke);}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1> Post Your Project</h1>
+
+    <div class="card">
+      <!-- User Info -->
+      <div class="user-header">
+        <div class="avatar">AS</div>
+        <div>
+          <div class="username">Aryan Srivastava</div>
+          <div style="color:var(--muted); font-size:.85rem;">Posting publicly</div>
+        </div>
+      </div>
+
+      <form id="postForm">
+        <label for="type">What are you posting?</label>
+        <select id="type">
+          <option>Project</option>
+          <option>Achievement</option>
+          <option>Collaboration Request</option>
+          <option>Job Opportunity</option>
+        </select>
+
+        <label for="title">Project Title</label>
+        <input type="text" id="title" placeholder="e.g., Smart Farming IoT">
+
+        <label for="description">Description</label>
+        <textarea id="description" placeholder="Write a short description of your project..."></textarea>
+
+        <label for="category">Category</label>
+        <select id="category">
+          <option>ML / AI</option>
+          <option>IoT / Hardware</option>
+          <option>Web / Mobile App</option>
+          <option>Biotech / Health</option>
+          <option>Social Impact</option>
+          <option>Other</option>
+        </select>
+
+        <label>Tags</label>
+        <div class="checkbox-group" id="tagsInput">
+          <label><input type="checkbox" value="React"> React</label>
+          <label><input type="checkbox" value="Python"> Python</label>
+          <label><input type="checkbox" value="TensorFlow"> TensorFlow</label>
+          <label><input type="checkbox" value="Arduino"> Arduino</label>
+          <label><input type="checkbox" value="Blockchain"> Blockchain</label>
+          <label><input type="checkbox" value="DataViz"> DataViz</label>
+        </div>
+
+        <label for="timeline">Timeline</label>
+        <input type="text" id="timeline" placeholder="e.g., Started Jan 2025, Completed Mar 2025">
+
+        <label for="team">Team Members</label>
+        <input type="text" id="team" placeholder="Tag collaborators (e.g., @Ritika, @John)">
+
+        <label for="github">GitHub Link</label>
+        <input type="url" id="github" placeholder="https://github.com/...">
+
+        <label for="demo">Live Demo / Deployed Link</label>
+        <input type="url" id="demo" placeholder="https://...">
+
+        <label for="youtube">YouTube Demo (optional)</label>
+        <input type="url" id="youtube" placeholder="https://youtube.com/...">
+
+        <label for="collaboration">Open for Collaboration?</label>
+        <select id="collaboration">
+          <option value="yes">Yes, looking for team members</option>
+          <option value="no">No, just showcasing</option>
+        </select>
+
+        <label for="file">Upload Project Media (optional)</label>
+        <input type="file" id="file" accept="image/*">
+
+        <button type="submit">Post Project </button>
+      </form>
+    </div>
+
+    <!-- Live Preview -->
+    <div class="preview">
+      <h2> Live Preview</h2>
+      <div class="preview-card" id="previewCard">
+        <div class="post-header">
+          <div class="post-user">
+            <div class="post-avatar">AS</div>
+            <div>
+              <div class="post-username">Aryan Srivastava</div>
+              <div class="post-time">just now</div>
+            </div>
+          </div>
+          <span class="post-tag">Demo</span>
+        </div>
+        <h3 id="previewTitle">Project Title will appear here</h3>
+        <div class="post-content">Description will appear here...</div>
+        <div class="tags"></div>
+        <div class="extra-info" id="extraInfo"></div>
+        <div class="links" id="previewLinks"></div>
+        <img id="previewImg" class="preview-img" style="display:none;" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const title = document.getElementById("title");
+    const description = document.getElementById("description");
+    const category = document.getElementById("category");
+    const timeline = document.getElementById("timeline");
+    const team = document.getElementById("team");
+    const github = document.getElementById("github");
+    const demo = document.getElementById("demo");
+    const youtube = document.getElementById("youtube");
+    const collaboration = document.getElementById("collaboration");
+    const tagsInput = document.querySelectorAll("#tagsInput input[type=checkbox]");
+    const fileInput = document.getElementById("file");
+
+    const previewCard = document.getElementById("previewCard");
+    const previewTitle = document.getElementById("previewTitle");
+    const postContent = previewCard.querySelector(".post-content");
+    const postTag = previewCard.querySelector(".post-tag");
+    const tagsContainer = previewCard.querySelector(".tags");
+    const extraInfo = document.getElementById("extraInfo");
+    const previewLinks = document.getElementById("previewLinks");
+    const previewImg = document.getElementById("previewImg");
+
+    function updatePreview() {
+      previewTitle.innerText = title.value || "Project Title will appear here";
+      postContent.innerText = description.value || "Description will appear here...";
+      postTag.innerText = category.value;
+
+      // Tags
+      tagsContainer.innerHTML = "";
+      tagsInput.forEach(tag => {
+        if(tag.checked){
+          const span = document.createElement("span");
+          span.className = "tag";
+          span.innerText = tag.value;
+          tagsContainer.appendChild(span);
+        }
+      });
+
+      // Extra Info
+      let info = "";
+      if(timeline.value) info += " " + timeline.value + "<br>";
+      if(team.value) info += " " + team.value + "<br>";
+      if(collaboration.value === "yes") info += " Open for collaboration";
+      if(collaboration.value === "no") info += " Showcasing only";
+      extraInfo.innerHTML = info;
+
+      // Links
+      previewLinks.innerHTML = "";
+      if(github.value) previewLinks.innerHTML += `<a class="link-btn" href="${github.value}" target="_blank">GitHub</a>`;
+      if(demo.value) previewLinks.innerHTML += `<a class="link-btn" href="${demo.value}" target="_blank">Live Demo</a>`;
+      if(youtube.value) previewLinks.innerHTML += `<a class="link-btn" href="${youtube.value}" target="_blank">YouTube</a>`;
+    }
+
+    // Handle image preview
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
+      if(file){
+        const reader = new FileReader();
+        reader.onload = e => {
+          previewImg.src = e.target.result;
+          previewImg.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    [title, description, category, timeline, team, github, demo, youtube, collaboration].forEach(el=>{
+      el.addEventListener("input", updatePreview);
+      el.addEventListener("change", updatePreview);
+    });
+    tagsInput.forEach(tag => tag.addEventListener("change", updatePreview));
+  </script>
+</body>
+</html>

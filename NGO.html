@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · NGO Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --elev: #151628;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --accent-2: #10c7b6;
+      --accent-3: #ff6db4;
+      --success: #28a745;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-1: 0 12px 40px rgba(0,0,0,.5);
+      --gradient: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(1000px 500px at 10% -10%, rgba(124,123,255,.25), transparent 50%),
+                  radial-gradient(1000px 500px at 90% 0%, rgba(16,199,182,.25), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1280px, 94vw); margin-inline: auto; padding: 1.2rem 0; }
+    .main-content { width: 100%; }
+
+    /* Navbar */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--panel) 90%, transparent);
+      border-bottom: 1px solid var(--stroke);
+      box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: .8rem 0; }
+    .brand-title { font-size: 1.6rem; font-weight: 800; letter-spacing: .3px; color: var(--text); }
+    .nav-links { display: flex; gap: .8rem; align-items: center; }
+    .nav-links a { padding: .5rem 1rem; border-radius: var(--radius-sm); color: var(--muted); transition: all .3s ease; }
+    .nav-links a:hover { color: var(--text); background: rgba(124,123,255,.15); transform: translateY(-2px); }
+    .user-btn { padding: .5rem 1rem; border-radius: var(--radius-sm); background: var(--gradient); color: white; font-weight: 600; cursor: pointer; transition: all .3s ease; }
+    .user-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(124,123,255,.4); }
+
+    /* Tab Bar */
+    .tab-bar {
+      display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0;
+      overflow-x: auto; white-space: nowrap; padding-bottom: .5rem;
+      scrollbar-width: thin; scrollbar-color: var(--accent) var(--panel);
+    }
+    .tab-bar::-webkit-scrollbar { height: 6px; }
+    .tab-bar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .tab-bar::-webkit-scrollbar-track { background: var(--panel); }
+    .tab {
+      padding: .6rem 1.2rem; border-radius: var(--radius-sm); background: rgba(24,25,39,.8);
+      border: 1px solid var(--stroke); color: var(--muted); font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: all .3s ease;
+    }
+    .tab:hover { color: var(--text); border-color: var(--accent); transform: translateY(-2px); }
+    .tab.active { background: var(--gradient); color: white; border-color: transparent; box-shadow: 0 4px 15px rgba(124,123,255,.4); }
+
+    /* NGO Portal Section */
+    .ngo-section { padding: 1.2rem 0; }
+    h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.5rem); margin: 0 0 1rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 2px 10px rgba(124,123,255,.3); }
+    .ngo-card { border: 1px solid var(--stroke); background: linear-gradient(145deg, #121327, #0e0f1f); border-radius: var(--radius-lg); padding: 1.2rem; box-shadow: var(--shadow-1); position: relative; transition: transform .3s ease, box-shadow .3s ease; }
+    .ngo-card:hover { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(124,123,255,.3); }
+    .ngo-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .ngo-head { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    label { display: block; margin: .6rem 0 .3rem; font-weight: 600; font-size: .9rem; color: var(--text); }
+    input, textarea, select {
+      width: 100%; padding: .8rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--stroke);
+      background: rgba(24,25,39,.8); color: var(--text); font-size: .9rem; transition: border-color .3s, box-shadow .3s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 8px rgba(124,123,255,.3); outline: none; }
+    textarea { min-height: 100px; resize: vertical; }
+    .btn {
+      padding: .8rem 1.5rem; border: none; border-radius: var(--radius-sm); background: var(--success);
+      color: white; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .3s ease; box-shadow: 0 4px 15px rgba(40,167,69,.4);
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(40,167,69,.6); }
+    .secondary-btn {
+      background: transparent; border: 1px solid var(--stroke); color: var(--muted);
+      box-shadow: none;
+    }
+    .secondary-btn:hover { color: var(--text); border-color: var(--accent); box-shadow: 0 4px 15px rgba(124,123,255,.3); transform: translateY(-3px); }
+    .registration-section { display: block; opacity: 1; transition: opacity .5s ease; }
+    .dashboard-section, .recent-projects, .post-project, .ngo-profile, .volunteers, .settings { display: none; opacity: 0; transition: opacity .5s ease; }
+    .visible { display: block; opacity: 1; }
+    .hidden { display: none; opacity: 0; }
+    .section-title { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 .6rem; color: var(--text); }
+    .project-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+    .project-item { padding: 1rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: var(--panel); cursor: pointer; transition: all .3s ease; }
+    .project-item:hover { background: rgba(124,123,255,.05); transform: translateY(-3px); }
+    .project-item h3 { margin: 0 0 .4rem; font-size: 1.1rem; }
+    .project-item p { font-size: .85rem; color: var(--muted); margin: 0 0 .4rem; }
+    .project-details { display: none; margin-top: .8rem; padding: .8rem; background: rgba(24,25,39,.5); border-radius: var(--radius-sm); }
+    .project-details.active { display: block; }
+    .volunteer { display: flex; align-items: center; gap: .8rem; margin-top: .6rem; padding: .4rem; border-radius: var(--radius-sm); transition: background .2s; }
+    .volunteer:hover { background: rgba(124,123,255,.1); }
+    .volunteer-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #2c2f4a, #3c3f5a); display: flex; align-items: center; justify-content: center; font-size: .8rem; font-weight: 600; box-shadow: 0 2px 8px rgba(0,0,0,.3); }
+    .volunteer-name { font-weight: 600; font-size: .9rem; }
+    .volunteer-status { font-size: .8rem; color: var(--muted); }
+    .error { color: var(--accent-3); font-size: .8rem; margin-top: .2rem; display: none; }
+    .pill { display: inline-flex; align-items: center; padding: .3rem .6rem; border-radius: 999px; background: rgba(124,123,255,.15); color: var(--muted); font-size: .8rem; margin: .4rem 0; }
+    .stat-item { padding: .8rem; border-radius: var(--radius-md); background: rgba(24,25,39,.5); text-align: center; transition: transform .3s ease; }
+    .stat-item:hover { transform: translateY(-3px); }
+    .search-bar { padding: .7rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--stroke); background: rgba(24,25,39,.8); width: 100%; margin-bottom: .8rem; }
+    .preview-card { display: none; margin-top: 1rem; padding: 1rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: var(--panel); }
+    .preview-card.active { display: block; }
+    .recent-project-card { padding: 1rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: var(--panel); transition: all .3s ease; }
+    .recent-project-card:hover { transform: translateY(-3px); background: rgba(124,123,255,.05); }
+    .recent-project-card h3 { margin: 0 0 .4rem; font-size: 1.1rem; }
+    .recent-project-card p { font-size: .85rem; color: var(--muted); margin: 0 0 .4rem; }
+
+    /* Burger Menu */
+    .burger { display: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
+    .nav-links.active { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--panel); padding: 1rem; border-bottom: 1px solid var(--stroke); }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .ngo-card, .recent-project-card { animation: fadeIn 0.5s ease-out; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .nav-links.active { display: flex; }
+      .burger { display: block; }
+      .tab-bar { flex-wrap: nowrap; overflow-x: auto; }
+    }
+    @media (max-width: 680px) {
+      .ngo-section { padding: 1rem 0; }
+      h1 { font-size: 1.6rem; }
+      .ngo-card, .recent-project-card { padding: 1rem; }
+      .container { padding: 1rem 0; }
+      .tab { padding: .5rem 1rem; font-size: .85rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand-title">PeerDeck</div>
+      <div class="burger">☰</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="explore.html">Projects</a>
+        <a href="explore.html">ProjectZone</a>
+        <a href="#recruiters">For Recruiters</a>
+        <a class="user-btn" href="profile.html">User</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Tab Bar -->
+  <div class="container">
+    <div class="tab-bar">
+      <div class="tab active" data-section="registration-section">Register</div>
+      <div class="tab" data-section="dashboard-section">Dashboard</div>
+      <div class="tab" data-section="post-project">Post Project</div>
+      <div class="tab" data-section="recent-projects">Recent Projects</div>
+      <div class="tab" data-section="volunteers">Volunteers</div>
+      <div class="tab" data-section="ngo-profile">NGO Profile</div>
+      <div class="tab" data-section="settings">Settings</div>
+    </div>
+  </div>
+
+  <!-- Registration Section -->
+  <section class="ngo-section registration-section visible" id="registration-section">
+    <div class="container">
+      <h1>NGO Portal</h1>
+      <div class="main-content">
+        <div class="ngo-card">
+          <div class="ngo-head">Register Your NGO</div>
+          <form id="ngoRegistrationForm">
+            <div>
+              <label for="ngoName">NGO Name</label>
+              <input type="text" id="ngoName" placeholder="e.g., Save the Future" required>
+              <div class="error" id="ngoNameError">Please enter a valid NGO name.</div>
+            </div>
+            <div>
+              <label for="ngoEmail">Email</label>
+              <input type="email" id="ngoEmail" placeholder="contact@ngo.org" required>
+              <div class="error" id="ngoEmailError">Please enter a valid email address.</div>
+            </div>
+            <div>
+              <label for="ngoDescription">Mission & Description</label>
+              <textarea id="ngoDescription" placeholder="Describe your NGO's mission and work..." required></textarea>
+              <div class="error" id="ngoDescriptionError">Please provide a description.</div>
+            </div>
+            <div>
+              <label for="ngoWebsite">Website (optional)</label>
+              <input type="url" id="ngoWebsite" placeholder="https://www.ngo.org">
+            </div>
+            <div>
+              <label for="ngoLocation">Location</label>
+              <input type="text" id="ngoLocation" placeholder="e.g., Chandigarh, India" required>
+              <div class="error" id="ngoLocationError">Please enter a location.</div>
+            </div>
+            <div style="display: flex; gap: .8rem; margin-top: 1rem;">
+              <button type="submit" class="btn">Register NGO</button>
+              <a class="btn secondary-btn" href="explore.html">Back to Explore</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard Section -->
+  <section class="ngo-section dashboard-section hidden" id="dashboard-section">
+    <div class="container">
+      <h1>NGO Dashboard</h1>
+      <div class="main-content">
+        <div class="ngo-card">
+          <div class="ngo-head">
+            <span>Dashboard Overview</span>
+            <button class="btn secondary-btn" id="newProjectBtn">New Project</button>
+          </div>
+          <div class="section-title">Overall Stats</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .8rem; font-size: .9rem; color: var(--muted);">
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">18</div>
+              <div>Total Volunteers</div>
+            </div>
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">2</div>
+              <div>Active Projects</div>
+            </div>
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">4</div>
+              <div>Completed Projects</div>
+            </div>
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">205</div>
+              <div>Total Upvotes</div>
+            </div>
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">25</div>
+              <div>Total Comments</div>
+            </div>
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">85%</div>
+              <div>Volunteer Retention</div>
+            </div>
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">320</div>
+              <div>Impact Hours</div>
+            </div>
+            <div class="stat-item">
+              <div style="font-size: 1.6rem; font-weight: 700; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;">₹50K</div>
+              <div>Funds Raised</div>
+            </div>
+          </div>
+          <div class="section-title">Your Projects</div>
+          <ul class="project-list">
+            <li class="project-item" data-project-id="clean-up">
+              <h3>Community Clean-Up Drive</h3>
+              <p>Organize a local clean-up event to promote environmental awareness. <br>Location: Chandigarh, India | Duration: 1 month | Slots: 10</p>
+              <div class="pill">Engagement: 120 Upvotes | 15 Comments | Posted: Aug 10, 2025</div>
+              <div class="project-details">
+                <div class="section-title">Feedback</div>
+                <p>"Great initiative! Well-organized and impactful." - Aryan S., Aug 12, 2025</p>
+                <p>"Loved the community vibe!" - Sonia P., Aug 11, 2025</p>
+                <div class="section-title">Volunteers</div>
+                <div class="volunteer">
+                  <div class="volunteer-avatar">AS</div>
+                  <div>
+                    <div class="volunteer-name">Aryan Srivastava</div>
+                    <div class="volunteer-status">Active · Joined: Aug 16, 2025 · Skills: Leadership, AI · Email: aryan@savethefuture.org</div>
+                  </div>
+                </div>
+                <div class="volunteer">
+                  <div class="volunteer-avatar">SP</div>
+                  <div>
+                    <div class="volunteer-name">Sonia P.</div>
+                    <div class="volunteer-status">Pending · Applied: Aug 17, 2025 · Skills: Biotech, Mobile App · Email: sonia@savethefuture.org</div>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="project-item" data-project-id="workshop">
+              <h3>Educational Workshop for Children</h3>
+              <p>Host workshops on basic education and skills. <br>Location: Mohali, India | Duration: 6 weeks | Slots: 5</p>
+              <div class="pill">Engagement: 85 Upvotes | 10 Comments | Posted: Aug 5, 2025</div>
+              <div class="project-details">
+                <div class="section-title">Feedback</div>
+                <p>"Very impactful! Kids learned a lot." - Mohit K., Aug 8, 2025</p>
+                <div class="section-title">Volunteers</div>
+                <div class="volunteer">
+                  <div class="volunteer-avatar">MK</div>
+                  <div>
+                    <div class="volunteer-name">Mohit K.</div>
+                    <div class="volunteer-status">Active · Joined: Aug 13, 2025 · Skills: AI, NLP · Email: mohit@savethefuture.org</div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Post Project Section -->
+  <section class="ngo-section post-project hidden" id="post-project">
+    <div class="container">
+      <h1>Post a New Project</h1>
+      <div class="main-content">
+        <div class="ngo-card">
+          <div class="ngo-head">Create Project</div>
+          <form id="projectPostForm">
+            <div>
+              <label for="projectTitle">Project Title</label>
+              <input type="text" id="projectTitle" placeholder="e.g., Community Clean-Up Drive" required>
+              <div class="error" id="projectTitleError">Please enter a project title.</div>
+            </div>
+            <div>
+              <label for="projectCategory">Category</label>
+              <select id="projectCategory" required>
+                <option value="" disabled selected>Select a category</option>
+                <option value="environment">Environment</option>
+                <option value="education">Education</option>
+                <option value="health">Health</option>
+                <option value="community">Community</option>
+              </select>
+              <div class="error" id="projectCategoryError">Please select a category.</div>
+            </div>
+            <div>
+              <label for="projectDescription">Description</label>
+              <textarea id="projectDescription" placeholder="Describe the project, goals, and impact..." required></textarea>
+              <div class="error" id="projectDescriptionError">Please provide a description.</div>
+            </div>
+            <div>
+              <label for="requiredSkills">Required Skills</label>
+              <input type="text" id="requiredSkills" placeholder="e.g., Leadership, Environmental Awareness" required>
+              <div class="error" id="requiredSkillsError">Please specify required skills.</div>
+            </div>
+            <div>
+              <label for="projectLocation">Location</label>
+              <input type="text" id="projectLocation" placeholder="e.g., Chandigarh, India" required>
+              <div class="error" id="projectLocationError">Please enter a location.</div>
+            </div>
+            <div>
+              <label for="projectStartDate">Start Date</label>
+              <input type="date" id="projectStartDate" required>
+              <div class="error" id="projectStartDateError">Please select a start date.</div>
+            </div>
+            <div>
+              <label for="projectEndDate">End Date</label>
+              <input type="date" id="projectEndDate" required>
+              <div class="error" id="projectEndDateError">Please select a valid end date.</div>
+            </div>
+            <div>
+              <label for="projectFunding">Funding Goal (₹)</label>
+              <input type="number" id="projectFunding" placeholder="e.g., 10000" min="0">
+              <div class="error" id="projectFundingError">Please enter a valid funding goal.</div>
+            </div>
+            <div>
+              <label for="projectTags">Tags (comma-separated)</label>
+              <input type="text" id="projectTags" placeholder="e.g., sustainability, community, volunteer">
+              <div class="error" id="projectTagsError">Please enter at least one tag.</div>
+            </div>
+            <div>
+              <label for="projectImage">Project Image (optional)</label>
+              <input type="file" id="projectImage" accept="image/*">
+              <div class="error" id="projectImageError">Please upload a valid image.</div>
+            </div>
+            <div style="display: flex; gap: .8rem; margin-top: 1rem;">
+              <button type="button" class="btn secondary-btn" id="previewProjectBtn">Preview</button>
+              <button type="submit" class="btn">Post Project</button>
+              <button type="button" class="btn secondary-btn" id="cancelProjectBtn">Cancel</button>
+            </div>
+          </form>
+          <div class="preview-card" id="projectPreview">
+            <h3 id="previewTitle">Project Title</h3>
+            <p id="previewDetails">Description, Location, Duration, Slots</p>
+            <div class="pill" id="previewMeta">Category: N/A | Tags: None</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Projects Section -->
+  <section class="ngo-section recent-projects hidden" id="recent-projects">
+    <div class="container">
+      <h1>Recent Projects</h1>
+      <div class="main-content">
+        <div class="ngo-card">
+          <div class="ngo-head">Latest Initiatives</div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .8rem;">
+            <div class="recent-project-card">
+              <h3>Community Clean-Up Drive</h3>
+              <p>Location: Chandigarh, India<br>Duration: 1 month<br>Slots: 8/10 filled</p>
+              <div class="pill">120 Upvotes | 15 Comments</div>
+              <button class="btn secondary-btn" onclick="showSection('dashboard-section')">View Details</button>
+            </div>
+            <div class="recent-project-card">
+              <h3>Educational Workshop for Children</h3>
+              <p>Location: Mohali, India<br>Duration: 6 weeks<br>Slots: 4/5 filled</p>
+              <div class="pill">85 Upvotes | 10 Comments</div>
+              <button class="btn secondary-btn" onclick="showSection('dashboard-section')">View Details</button>
+            </div>
+            <div class="recent-project-card">
+              <h3>Health Camp Initiative</h3>
+              <p>Location: Delhi, India<br>Duration: 2 weeks<br>Slots: 6/8 filled</p>
+              <div class="pill">95 Upvotes | 12 Comments</div>
+              <button class="btn secondary-btn" onclick="showSection('dashboard-section')">View Details</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Volunteers Section -->
+  <section class="ngo-section volunteers hidden" id="volunteers">
+    <div class="container">
+      <h1>Volunteers</h1>
+      <div class="main-content">
+        <div class="ngo-card">
+          <div class="ngo-head">Your Volunteers</div>
+          <input type="text" class="search-bar" id="volunteerSearch" placeholder="Search volunteers by name or skill...">
+          <div class="volunteer-list">
+            <div class="volunteer">
+              <div class="volunteer-avatar">AS</div>
+              <div>
+                <div class="volunteer-name">Aryan Srivastava</div>
+                <div class="volunteer-status">Active · Skills: Machine Learning, AI · Projects: Community Clean-Up · Joined: Aug 16, 2025 · Email: aryan@savethefuture.org</div>
+              </div>
+            </div>
+            <div class="volunteer">
+              <div class="volunteer-avatar">SP</div>
+              <div>
+                <div class="volunteer-name">Sonia P.</div>
+                <div class="volunteer-status">Pending · Skills: Biotech, Mobile App Development · Projects: Community Clean-Up · Applied: Aug 17, 2025 · Email: sonia@savethefuture.org</div>
+              </div>
+            </div>
+            <div class="volunteer">
+              <div class="volunteer-avatar">MK</div>
+              <div>
+                <div class="volunteer-name">Mohit K.</div>
+                <div class="volunteer-status">Active · Skills: AI, NLP · Projects: Educational Workshop · Joined: Aug 13, 2025 · Email: mohit@savethefuture.org</div>
+              </div>
+            </div>
+            <div class="pill">Total Volunteers: 18</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NGO Profile Section -->
+  <section class="ngo-section ngo-profile hidden" id="ngo-profile">
+    <div class="container">
+      <h1>NGO Profile</h1>
+      <div class="main-content">
+        <div class="ngo-card">
+          <div class="ngo-head">Profile Details</div>
+          <div style="font-size: .9rem; color: var(--muted); line-height: 1.8;">
+            <p><strong>Name:</strong> Save the Future</p>
+            <p><strong>Email:</strong> contact@savethefuture.org</p>
+            <p><strong>Location:</strong> 123 Green Lane, Sector 17, Chandigarh, India</p>
+            <p><strong>Founding Year:</strong> 2018</p>
+            <p><strong>Team Size:</strong> 12 core members, 50+ volunteers</p>
+            <p><strong>Description:</strong> Dedicated to improving lives through education, health, and environmental initiatives, focusing on sustainable community development.</p>
+            <p><strong>Previous Work:</strong> Organized 5 clean-up drives, educated 200+ children in literacy programs, planted 500 trees, conducted 3 health camps.</p>
+            <p><strong>Impact Metrics:</strong> Served 500+ beneficiaries, raised ₹50,000 in donations, 1,000+ community engagement hours.</p>
+            <p><strong>Website:</strong> <a href="https://www.savethefuture.org" target="_blank">www.savethefuture.org</a></p>
+            <button class="btn secondary-btn" id="editProfileBtn">Edit Profile</button>
+          </div>
+          <div id="edit-profile-form" style="display: none; margin-top: 1rem;">
+            <form id="profileEditForm">
+              <div>
+                <label for="editNgoName">NGO Name</label>
+                <input type="text" id="editNgoName" value="Save the Future" required>
+              </div>
+              <div>
+                <label for="editNgoEmail">Email</label>
+                <input type="email" id="editNgoEmail" value="contact@savethefuture.org" required>
+              </div>
+              <div>
+                <label for="editNgoLocation">Location</label>
+                <input type="text" id="editNgoLocation" value="123 Green Lane, Sector 17, Chandigarh, India" required>
+              </div>
+              <div>
+                <label for="editNgoDescription">Description</label>
+                <textarea id="editNgoDescription" required>Dedicated to improving lives through education, health, and environmental initiatives, focusing on sustainable community development.</textarea>
+              </div>
+              <div style="display: flex; gap: .8rem; margin-top: 1rem;">
+                <button type="submit" class="btn">Save Changes</button>
+                <button type="button" class="btn secondary-btn" id="cancelEditProfile">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Settings Section -->
+  <section class="ngo-section settings hidden" id="settings">
+    <div class="container">
+      <h1>Settings</h1>
+      <div class="main-content">
+        <div class="ngo-card">
+          <div class="ngo-head">Account Settings</div>
+          <form id="settingsForm">
+            <div>
+              <label for="ngoEmailUpdate">Update Email</label>
+              <input type="email" id="ngoEmailUpdate" placeholder="contact@ngo.org" value="contact@savethefuture.org">
+            </div>
+            <div>
+              <label for="ngoPassword">Change Password</label>
+              <input type="password" id="ngoPassword" placeholder="New Password">
+            </div>
+            <div>
+              <label for="ngoNotifications">Notification Preferences</label>
+              <select id="ngoNotifications">
+                <option value="email">Email Notifications</option>
+                <option value="app">In-App Notifications</option>
+                <option value="both" selected>Both</option>
+                <option value="none">None</option>
+              </select>
+            </div>
+            <div>
+              <label for="ngoTeam">Manage Team Members</label>
+              <textarea id="ngoTeam" placeholder="Enter team member emails (one per line)..."></textarea>
+            </div>
+            <div>
+              <label for="ngoVisibility">Profile Visibility</label>
+              <select id="ngoVisibility">
+                <option value="public" selected>Public</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+            <div style="display: flex; gap: .8rem; margin-top: 1rem;">
+              <button type="submit" class="btn">Save Settings</button>
+              <button type="button" class="btn secondary-btn" id="exportDataBtn">Export Data</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap; padding:1rem 0; color:var(--muted); font-size:.9rem;">
+      <span>© <span id="year"></span> PeerDeck</span>
+      <div style="display:flex; gap:.8rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Section Switching
+    const sections = ['registration-section', 'dashboard-section', 'post-project', 'recent-projects', 'volunteers', 'ngo-profile', 'settings'];
+    function showSection(sectionId) {
+      sections.forEach(id => {
+        const section = document.getElementById(id);
+        section.classList.toggle('visible', id === sectionId);
+        section.classList.toggle('hidden', id !== sectionId);
+      });
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.toggle('active', tab.getAttribute('data-section') === sectionId);
+      });
+      if (sectionId !== 'post-project') {
+        document.getElementById('projectPreview').classList.remove('active');
+        document.getElementById('projectPostForm').reset();
+        document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      }
+    }
+
+    // Tab Bar Navigation
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const sectionId = tab.getAttribute('data-section');
+        showSection(sectionId);
+      });
+    });
+
+    // NGO Registration Form
+    const ngoForm = document.getElementById('ngoRegistrationForm');
+    ngoForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+      const ngoName = document.getElementById('ngoName').value.trim();
+      const ngoEmail = document.getElementById('ngoEmail').value.trim();
+      const ngoDescription = document.getElementById('ngoDescription').value.trim();
+      const ngoLocation = document.getElementById('ngoLocation').value.trim();
+
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      if (!ngoName) {
+        document.getElementById('ngoNameError').style.display = 'block';
+        valid = false;
+      }
+      if (!ngoEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ngoEmail)) {
+        document.getElementById('ngoEmailError').style.display = 'block';
+        valid = false;
+      }
+      if (!ngoDescription) {
+        document.getElementById('ngoDescriptionError').style.display = 'block';
+        valid = false;
+      }
+      if (!ngoLocation) {
+        document.getElementById('ngoLocationError').style.display = 'block';
+        valid = false;
+      }
+      if (valid) {
+        alert('NGO registered successfully! Welcome to PeerDeck.');
+        showSection('dashboard-section');
+      }
+    });
+
+    // Project Form Handling
+    const projectForm = document.getElementById('projectPostForm');
+    const previewProjectBtn = document.getElementById('previewProjectBtn');
+    const cancelProjectBtn = document.getElementById('cancelProjectBtn');
+    const projectPreview = document.getElementById('projectPreview');
+
+    previewProjectBtn.addEventListener('click', () => {
+      let valid = true;
+      const title = document.getElementById('projectTitle').value.trim();
+      const category = document.getElementById('projectCategory').value;
+      const description = document.getElementById('projectDescription').value.trim();
+      const skills = document.getElementById('requiredSkills').value.trim();
+      const location = document.getElementById('projectLocation').value.trim();
+      const startDate = document.getElementById('projectStartDate').value;
+      const endDate = document.getElementById('projectEndDate').value;
+      const funding = document.getElementById('projectFunding').value.trim();
+      const tags = document.getElementById('projectTags').value.trim();
+      const image = document.getElementById('projectImage').files[0];
+
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      if (!title) {
+        document.getElementById('projectTitleError').style.display = 'block';
+        valid = false;
+      }
+      if (!category) {
+        document.getElementById('projectCategoryError').style.display = 'block';
+        valid = false;
+      }
+      if (!description) {
+        document.getElementById('projectDescriptionError').style.display = 'block';
+        valid = false;
+      }
+      if (!skills) {
+        document.getElementById('requiredSkillsError').style.display = 'block';
+        valid = false;
+      }
+      if (!location) {
+        document.getElementById('projectLocationError').style.display = 'block';
+        valid = false;
+      }
+      if (!startDate) {
+        document.getElementById('projectStartDateError').style.display = 'block';
+        valid = false;
+      }
+      if (!endDate || new Date(endDate) <= new Date(startDate)) {
+        document.getElementById('projectEndDateError').style.display = 'block';
+        valid = false;
+      }
+      if (funding && funding < 0) {
+        document.getElementById('projectFundingError').style.display = 'block';
+        valid = false;
+      }
+      if (!tags) {
+        document.getElementById('projectTagsError').style.display = 'block';
+        valid = false;
+      }
+      if (image && !image.type.startsWith('image/')) {
+        document.getElementById('projectImageError').style.display = 'block';
+        valid = false;
+      }
+      if (valid) {
+        document.getElementById('previewTitle').textContent = title;
+        document.getElementById('previewDetails').innerHTML = `${description.slice(0, 100)}${description.length > 100 ? '...' : ''}<br>Location: ${location} | Duration: ${startDate} to ${endDate} | Funding Goal: ₹${funding || '0'}`;
+        document.getElementById('previewMeta').textContent = `Category: ${category.charAt(0).toUpperCase() + category.slice(1)} | Tags: ${tags || 'None'}`;
+        projectPreview.classList.add('active');
+      }
+    });
+
+    cancelProjectBtn.addEventListener('click', () => {
+      projectForm.reset();
+      projectPreview.classList.remove('active');
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      showSection('dashboard-section');
+    });
+
+    projectForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let valid = true;
+      const title = document.getElementById('projectTitle').value.trim();
+      const category = document.getElementById('projectCategory').value;
+      const description = document.getElementById('projectDescription').value.trim();
+      const skills = document.getElementById('requiredSkills').value.trim();
+      const location = document.getElementById('projectLocation').value.trim();
+      const startDate = document.getElementById('projectStartDate').value;
+      const endDate = document.getElementById('projectEndDate').value;
+      const funding = document.getElementById('projectFunding').value.trim();
+      const tags = document.getElementById('projectTags').value.trim();
+      const image = document.getElementById('projectImage').files[0];
+
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      if (!title) {
+        document.getElementById('projectTitleError').style.display = 'block';
+        valid = false;
+      }
+      if (!category) {
+        document.getElementById('projectCategoryError').style.display = 'block';
+        valid = false;
+      }
+      if (!description) {
+        document.getElementById('projectDescriptionError').style.display = 'block';
+        valid = false;
+      }
+      if (!skills) {
+        document.getElementById('requiredSkillsError').style.display = 'block';
+        valid = false;
+      }
+      if (!location) {
+        document.getElementById('projectLocationError').style.display = 'block';
+        valid = false;
+      }
+      if (!startDate) {
+        document.getElementById('projectStartDateError').style.display = 'block';
+        valid = false;
+      }
+      if (!endDate || new Date(endDate) <= new Date(startDate)) {
+        document.getElementById('projectEndDateError').style.display = 'block';
+        valid = false;
+      }
+      if (funding && funding < 0) {
+        document.getElementById('projectFundingError').style.display = 'block';
+        valid = false;
+      }
+      if (!tags) {
+        document.getElementById('projectTagsError').style.display = 'block';
+        valid = false;
+      }
+      if (image && !image.type.startsWith('image/')) {
+        document.getElementById('projectImageError').style.display = 'block';
+        valid = false;
+      }
+      if (valid) {
+        alert('Project posted successfully! Volunteers will be notified.');
+        projectForm.reset();
+        projectPreview.classList.remove('active');
+        showSection('dashboard-section');
+      }
+    });
+
+    // Profile Edit Form
+    const profileEditForm = document.getElementById('profileEditForm');
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const cancelEditProfile = document.getElementById('cancelEditProfile');
+    const editProfileSection = document.getElementById('edit-profile-form');
+
+    editProfileBtn.addEventListener('click', () => {
+      editProfileSection.style.display = 'block';
+    });
+    cancelEditProfile.addEventListener('click', () => {
+      editProfileSection.style.display = 'none';
+      profileEditForm.reset();
+    });
+    profileEditForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Profile updated successfully!');
+      editProfileSection.style.display = 'none';
+    });
+
+    // Settings Form
+    const settingsForm = document.getElementById('settingsForm');
+    const exportDataBtn = document.getElementById('exportDataBtn');
+    settingsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Settings saved successfully!');
+    });
+    exportDataBtn.addEventListener('click', () => {
+      alert('Data export initiated. Check your email.');
+    });
+
+    // Toggle Project Details
+    document.querySelectorAll('.project-item').forEach(item => {
+      item.addEventListener('click', (e) => {
+        if (e.target.closest('.btn')) return;
+        const details = item.querySelector('.project-details');
+        details.classList.toggle('active');
+      });
+    });
+
+    // Volunteer Search
+    const volunteerSearch = document.getElementById('volunteerSearch');
+    volunteerSearch.addEventListener('input', (e) => {
+      const searchTerm = e.target.value.toLowerCase();
+      document.querySelectorAll('.volunteer').forEach(volunteer => {
+        const name = volunteer.querySelector('.volunteer-name').textContent.toLowerCase();
+        const status = volunteer.querySelector('.volunteer-status').textContent.toLowerCase();
+        volunteer.style.display = name.includes(searchTerm) || status.includes(searchTerm) ? 'flex' : 'none';
+      });
+    });
+
+    // Burger Menu Toggle
+    document.querySelector('.burger').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Post a Job Opportunity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --elev: #151628;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --accent-2: #10c7b6;
+      --accent-3: #ff6db4;
+      --success: #2fd17b;
+      --job-button: #807cfc;
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,123,255,.2), transparent 50%),
+                  radial-gradient(1200px 600px at 90% 0%, rgba(16,199,182,.2), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin-inline: auto; padding: 2rem 0; }
+    .card { background: linear-gradient(180deg, #121327, #0e0f1f); border: 1px solid var(--stroke); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-1); }
+    h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.5rem); margin: 0 0 1rem; }
+    label { display: block; margin: .6rem 0 .3rem; font-weight: 600; }
+    input, textarea, select {
+      width: 100%; padding: .8rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--stroke);
+      background: #181927; color: var(--text); font-size: 1rem; transition: border-color .2s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); outline: none; }
+    textarea { min-height: 120px; resize: vertical; }
+    button, .btn {
+      padding: .9rem 1.5rem; border: none; border-radius: var(--radius-sm); background: linear-gradient(180deg, color-mix(in srgb, var(--job-button) 40%, #1a1b31), #161739);
+      color: white; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform .2s, opacity .2s;
+    }
+    button:hover, .btn:hover { opacity: .9; transform: translateY(-2px); border-color: color-mix(in srgb, var(--job-button) 40%, #2a2e57); }
+    .btn.ghost { background: transparent; border: 1px solid var(--stroke); }
+    .pill { display: inline-flex; align-items: center; gap: .5rem; padding: .6rem 1rem; border: 1px solid var(--stroke); border-radius: 999px; background: #0f1020; }
+
+    /* Navbar */
+    .nav {
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      border-bottom: 1px solid var(--stroke);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: .9rem 0; }
+    .logo { font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+    .nav-links { display: flex; gap: .8rem; align-items: center; }
+    .nav-links a { padding: .55rem .9rem; border-radius: 10px; color: var(--muted); text-decoration: none; }
+    .nav-links a:hover { color: var(--text); background: #0f1020; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .container { width: min(100%, 92vw); }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 680px) {
+      .btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="logo">PeerDeck Recruiter</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="rec.html">Dashboard</a>
+        <a href="talent-explore.html">Talent Explorer</a>
+        <a href="post-job.html">Post Job</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container">
+    <h1>Post a Job Opportunity</h1>
+    <div class="card">
+      <form id="jobForm">
+        <label for="jobTitle">Job Title</label>
+        <input type="text" id="jobTitle" placeholder="e.g., AI/ML Intern">
+
+        <label for="company">Company</label>
+        <input type="text" id="company" placeholder="e.g., TechCorp Pvt Ltd">
+
+        <label for="roleType">Role Type</label>
+        <select id="roleType">
+          <option>Internship</option>
+          <option>Full-Time</option>
+          <option>Part-Time</option>
+        </select>
+
+        <label for="skills">Required Skills</label>
+        <input type="text" id="skills" placeholder="e.g., Python, ML, React">
+
+        <label for="location">Location</label>
+        <input type="text" id="location" placeholder="e.g., Bangalore, India">
+
+        <label for="salary">Salary / Stipend</label>
+        <input type="text" id="salary" placeholder="e.g., ₹25,000 per month">
+
+        <label for="duration">Duration</label>
+        <input type="text" id="duration" placeholder="e.g., 3 months">
+
+        <label for="applyLink">Apply Link</label>
+        <input type="url" id="applyLink" placeholder="https://...">
+
+        <button type="submit">Post Job</button>
+      </form>
+    </div>
+  </div>
+
+ 
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

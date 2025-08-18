@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · AI-Content Filter Repository</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --elev: #151628;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --accent-2: #10c7b6;
+      --accent-3: #ff6db4;
+      --success: #2fd17b;
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.4);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,123,255,.2), transparent 50%),
+                  radial-gradient(1200px 600px at 90% 0%, rgba(16,199,182,.2), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1200px, 92vw); margin-inline: auto; padding: 2rem 0; }
+    .pill { display: inline-flex; align-items: center; gap: .5rem; padding: .6rem 1rem; border: 1px solid var(--stroke); border-radius: 999px; background: #0f1020; }
+
+    /* Navbar */
+    .nav {
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      border-bottom: 1px solid var(--stroke);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: .9rem 0; }
+    .logo { font-weight: 700; font-size: 1.2rem; color: var(--accent); }
+    .nav-links { display: flex; gap: .8rem; align-items: center; }
+    .nav-links a { padding: .55rem .9rem; border-radius: 10px; color: var(--muted); text-decoration: none; }
+    .nav-links a:hover { color: var(--text); background: #0f1020; }
+
+    /* Repo Section */
+    .repo-section { padding: 3rem 0; }
+    .repo-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    h1 { font-size: clamp(2rem, 3.6vw + .5rem, 3.2rem); margin: 0; }
+    .repo-meta { display: flex; gap: 1rem; margin: 1rem 0; }
+    .repo-description { color: var(--muted); max-width: 60ch; margin: .5rem 0; }
+    .repo-card { border: 1px solid var(--stroke); background: linear-gradient(180deg, #121327, #0e0f1f); border-radius: var(--radius-lg); padding: 1.5rem; box-shadow: var(--shadow-1); }
+    .code-snippet { background: #0f1020; border: 1px solid var(--stroke); border-radius: var(--radius-md); padding: 1rem; font-family: 'Courier New', monospace; font-size: .9rem; color: var(--text); overflow-x: auto; }
+    .metrics { display: flex; gap: 1rem; font-size: .85rem; color: var(--muted); margin: 1rem 0; }
+    .actions { display: flex; gap: .8rem; margin-top: 1rem; }
+    .badge { font-size: .75rem; padding: .2rem .5rem; border: 1px solid var(--stroke); border-radius: 999px; color: var(--muted); }
+    .tags { display: flex; flex-wrap: wrap; gap: .4rem; margin: .6rem 0; }
+    .tag { font-size: .75rem; padding: .25rem .55rem; border: 1px solid var(--stroke); border-radius: 999px; color: var(--muted); }
+
+    /* Buttons */
+    .btn { display: inline-flex; gap: .5rem; align-items: center; justify-content: center; padding: .7rem 1rem; border-radius: 12px; border: 1px solid var(--stroke); background: linear-gradient(180deg, #1a1b31, #121327); color: var(--text); font-weight: 600; }
+    .btn:hover { border-color: #2a2e57; }
+    .btn.primary { background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 40%, #1a1b31), #161739); border-color: color-mix(in srgb, var(--accent) 40%, #2a2e57); }
+    .btn.success { background: linear-gradient(180deg, color-mix(in srgb, var(--success) 40%, #193128), #0f1f17); border-color: #1f4e3a; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--stroke); padding: 1.4rem 0; color: var(--muted); }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .container { width: min(100%, 92vw); }
+      .nav-links { display: none; }
+      .repo-header { flex-direction: column; align-items: flex-start; gap: .5rem; }
+    }
+    @media (max-width: 680px) {
+      .repo-section { padding: 2rem 0; }
+      .actions { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="logo">PeerDeck</div>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="rec.html">Dashboard</a>
+        <a href="talent-explore.html">Talent Explorer</a>
+        <a href="post-job.html">Post Job</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Repository Section -->
+  <section class="repo-section">
+    <div class="container">
+      <div class="repo-header">
+        <h1>AI-Content Filter</h1>
+        <span class="badge">Research</span>
+      </div>
+      <div class="repo-card">
+        <div class="repo-meta">
+          <span class="pill">Posted 2 days ago</span>
+          <span class="pill">Team Orion</span>
+          <span class="pill">Course: NLP</span>
+        </div>
+        <p class="repo-description">Classifier prototype to downrank AI-like content and highlight authentic posts. Built with Python and TensorFlow, integrated with PeerDeck to ensure genuine student contributions.</p>
+        <div class="tags">
+          <span class="tag">Stack: Python + TF</span>
+          <span class="tag">Trust & Safety</span>
+          <span class="tag">NLP</span>
+        </div>
+        <div class="metrics">
+          <span>★ Stars: 820</span>
+          <span>Forks: 45</span>
+          <span>Upvotes: 820</span>
+          <span>F1 Score: 0.74</span>
+          <span>Dataset: 8k</span>
+        </div>
+        <div class="code-snippet">
+          <pre>
+# Example code snippet from AI-Content Filter
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, LSTM
+
+def build_model(vocab_size, embedding_dim):
+    model = Sequential([
+        tf.keras.layers.Embedding(vocab_size, embedding_dim),
+        LSTM(128, return_sequences=True),
+        LSTM(64),
+        Dense(32, activation='relu'),
+        Dense(1, activation='sigmoid')
+    ])
+    model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+    return model
+          </pre>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="projectdetail.html" target="_blank">View Description </a>
+          <a class="btn" href="livedemo.html">Live Demo</a>
+          <a class="btn ghost" href="explore.html">Back to Projects</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap">
+      <div style="display:flex; align-items:center; gap:.6rem">
+        <div class="brand-mark" aria-hidden="true" style="width:24px; height:24px; border-radius:8px"></div>
+        <span>© <span id="year"></span> PeerDeck</span>
+      </div>
+      <div style="display:flex; gap:1rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

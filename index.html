@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Project-first student network</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* =======================
+       THEME & RESET
+    ======================= */
+    :root{
+      --bg: #0b0b12;            /* app background - near black */
+      --panel: #10111a;         /* cards/nav background */
+      --elev: #151628;          /* elevated panel */
+      --text: #e8eaf1;          /* primary text */
+      --muted: #a6abc3;         /* secondary text */
+      --stroke: #202441;        /* borders */
+      --accent: #7c7bff;        /* primary accent */
+      --accent-2: #10c7b6;      /* secondary accent */
+      --accent-3: #ff6db4;      /* tertiary accent */
+      --success: #2fd17b;
+      --warning: #ffd166;
+      --danger: #ff6b6b;
+      --radius-xl: 20px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow-1: 0 10px 30px rgba(0,0,0,.4);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+      background: radial-gradient(1200px 600px at 10% -10%, rgba(124,123,255,.2), transparent 50%),
+                  radial-gradient(1200px 600px at 90% 0%, rgba(16,199,182,.2), transparent 50%),
+                  var(--bg);
+      color:var(--text);
+      line-height:1.55;
+    }
+    a{color:inherit; text-decoration:none}
+    img{max-width:100%; display:block}
+    .container{width:min(1200px, 92vw); margin-inline:auto}
+    .pill{display:inline-flex; align-items:center; gap:.5rem; padding:.6rem 1rem; border:1px solid var(--stroke); border-radius:999px; background:#0f1020}
+
+    /* =======================
+       NAVBAR
+    ======================= */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      backdrop-filter: blur(10px);
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
+      border-bottom:1px solid var(--stroke);
+    }
+    .nav-inner{display:flex; align-items:center; justify-content:space-between; padding:.9rem 0}
+    .brand{display:flex; align-items:center; gap:.7rem}
+    .brand-mark{width:36px; height:36px; border-radius:12px; background:conic-gradient(from 60deg, var(--accent), var(--accent-2), var(--accent-3), var(--accent)); box-shadow: inset 0 0 40px rgba(255,255,255,.15)}
+    .brand-title{font-weight:800; letter-spacing:.2px}
+    .nav-links{display:flex; gap:.8rem; align-items:center}
+    .nav-links a{padding:.55rem .9rem; border-radius:10px; color:var(--muted)}
+    .nav-links a:hover{color:var(--text); background:#0f1020}
+    .btn{display:inline-flex; gap:.5rem; align-items:center; justify-content:center; padding:.7rem 1rem; border-radius:12px; border:1px solid var(--stroke); background:linear-gradient(180deg, #1a1b31, #121327); color:var(--text); font-weight:600}
+    .btn:hover{border-color:#2a2e57}
+    .btn.primary{background:linear-gradient(180deg, color-mix(in srgb, var(--accent) 40%, #1a1b31), #161739); border-color:color-mix(in srgb, var(--accent) 40%, #2a2e57)}
+
+    /* =======================
+       HERO
+    ======================= */
+    .hero{padding: 3.4rem 0 2.8rem}
+    .hero-grid{display:grid; grid-template-columns: 1.3fr .7fr; gap:2rem}
+    .eyebrow{display:inline-flex; gap:.5rem; align-items:center; padding:.35rem .7rem; border:1px dashed var(--stroke); border-radius:999px; color:var(--muted)}
+    .eyebrow .dot{width:6px; height:6px; border-radius:999px; background:var(--accent)}
+    h1{font-size:clamp(2rem, 3.6vw + .5rem, 3.2rem); line-height:1.15; margin:1rem 0 .6rem}
+    .lead{font-size:1.1rem; color:var(--muted); max-width:58ch}
+    .hero-cta{display:flex; gap:.8rem; margin-top:1.2rem}
+    .statbar{display:flex; gap:1rem; margin-top:1.8rem}
+    .stat{padding:.7rem 1rem; border:1px solid var(--stroke); border-radius:14px; background:var(--panel)}
+    .hero-card{border:1px solid var(--stroke); background:linear-gradient(180deg, #121327, #0e0f1f); border-radius:var(--radius-xl); padding:1rem; box-shadow:var(--shadow-1)}
+    .hero-card .card-head{display:flex; align-items:center; justify-content:space-between; padding-bottom:.6rem; border-bottom:1px solid var(--stroke)}
+    .feed-pill{display:inline-flex; background:#0f1020; border:1px solid var(--stroke); border-radius:999px; overflow:hidden}
+    .feed-pill button{padding:.45rem .8rem; color:var(--muted); background:transparent; border:none; cursor:pointer}
+    .feed-pill button.active{background:linear-gradient(180deg, #1c1d35, #15162b); color:var(--text)}
+    .mini-feed{display:grid; gap:.8rem; padding-top:.8rem}
+    .post{border:1px solid var(--stroke); border-radius:12px; padding:.7rem .9rem; background: #0e0f1f}
+    .post .meta{display:flex; gap:.6rem; align-items:center; font-size:.85rem; color:var(--muted)}
+    .badge{font-size:.75rem; padding:.2rem .5rem; border:1px solid var(--stroke); border-radius:999px; color:var(--muted)}
+
+    /* =======================
+       SECTIONS
+    ======================= */
+    section{padding:2.6rem 0}
+    .section-head{display:flex; align-items:end; justify-content:space-between; margin-bottom:1.1rem}
+    .section-head h2{margin:0; font-size:1.6rem}
+    .muted{color:var(--muted)}
+
+    /* Projects grid */
+    .grid{display:grid; gap:1rem}
+    .grid.projects{grid-template-columns: repeat(12, 1fr)}
+    .card{border:1px solid var(--stroke); border-radius:var(--radius-lg); background:linear-gradient(180deg, #111226, #0c0d1d)}
+    .project{grid-column: span 4; padding:1rem}
+    .project .top{display:flex; align-items:center; justify-content:space-between}
+    .project .title{font-weight:700}
+    .tags{display:flex; flex-wrap:wrap; gap:.4rem; margin:.6rem 0}
+    .tag{font-size:.75rem; padding:.25rem .55rem; border:1px solid var(--stroke); border-radius:999px; color:var(--muted)}
+    .metrics{display:flex; gap:1rem; font-size:.85rem; color:var(--muted)}
+    .actions{display:flex; gap:.6rem; margin-top:.8rem}
+
+    /* Feature rows (Recruiter / ProjectZone) */
+    .row{display:grid; grid-template-columns: 1fr 1fr; gap:1rem}
+    .feature{padding:1.1rem}
+    .feature h3{margin:.1rem 0 .5rem}
+
+    /* Footer */
+    footer{border-top:1px solid var(--stroke); padding:1.4rem 0; color:var(--muted)}
+
+    /* Buttons */
+    .btn.ghost{background:transparent}
+    .btn.success{background:linear-gradient(180deg, color-mix(in srgb, var(--success) 40%, #193128), #0f1f17); border-color: #1f4e3a}
+
+    /* Responsive */
+    @media (max-width: 960px){
+      .hero-grid{grid-template-columns: 1fr;}
+      .row{grid-template-columns: 1fr}
+      .project{grid-column: span 6}
+    }
+    @media (max-width: 680px){
+      .nav-links{display:none}
+      .hero{padding-top:2rem}
+      .project{grid-column: span 12}
+      .hero-cta{flex-wrap:wrap}
+    }
+  </style>
+</head>
+<body>
+  <!-- ======================= NAVBAR ======================= -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <div class="brand-title">PeerDeck</div>
+          <div style="font-size:.78rem; color:var(--muted)">Project first · resume later</div>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="feed.html">Feed</a>
+        <a href="explore.html">Projects</a>
+        <a href="explore.html">ProjectZone</a>
+        <a href="NGO.html">NGO</a>
+        <a class="btn ghost" href="profile.html">User Profile</a>
+        
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======================= HERO ======================= -->
+  <header class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow"><span class="dot"></span> Student‑first platform</span>
+        <h1>
+          Show real work. Get real opportunities.
+        </h1>
+        <p class="lead">A space where learning, projects, and opportunities come together. Share course‑backed projects, build authentic profiles, and discover local + global chances to grow.</p>
+        <div class="hero-cta">
+          <a class="btn primary" href="explore.html">Explore projects</a>
+          <a class="btn" href="post.html">Post your project</a>
+          <span class="pill" title="AI‑generated content is filtered for authenticity">AI‑content filter: ON</span>
+        </div>
+        <div class="statbar">
+          <div class="stat">Verified course tags</div>
+          <div class="stat">GitHub · LeetCode · Kaggle hooks</div>
+          <div class="stat">Local & Global feeds</div>
+        </div>
+      </div>
+      <!-- Right side: Leaderboard + Trending -->
+      <aside class="hero-card" id="feed" style="display:grid; gap:1rem">
+        <!-- Leaderboard -->
+        <div class="card" style="padding:1rem">
+          <div class="card-head" style="margin-bottom:.6rem; display:flex; justify-content:space-between; align-items:center">
+            <strong>Leaderboard</strong>
+            <span class="badge">Your Stats</span>
+          </div>
+          <ul style="list-style:none; padding:0; margin:0; display:grid; gap:.5rem; font-size:.9rem">
+            <li><strong>Last Project:</strong> CampusJobs ML Recommender</li>
+            <li>⭐ Upvotes: 420</li>
+            <li>🚀 Growth: +37% this week</li>
+            <li>📊 Rank: #4 Rising</li>
+          </ul>
+                <div style="margin-top:.8rem; font-size:.9rem">
+      <a href="leaderboard.html" style="color:var(--accent)">View more</a>
+    </div>
+        </div>
+
+        <!-- Trending Projects -->
+        <div class="card" style="padding:1rem">
+          <div class="card-head" style="margin-bottom:.6rem; display:flex; justify-content:space-between; align-items:center">
+            <strong>Trending Projects</strong>
+            <span class="badge">🔥 Hot</span>
+          </div>
+          <ul style="list-style:none; padding:0; margin:0; display:grid; gap:.6rem; font-size:.9rem">
+            <li>
+              <strong>AI-Content Filter</strong><br>
+              <span class="muted">+820 upvotes · Research</span>
+            </li>
+            <li>
+              <strong>HealthTrack+ App</strong><br>
+              <span class="muted">+650 upvotes · Health</span>
+            </li>
+            <li>
+              <strong>NGO Volunteering Portal</strong><br>
+              <span class="muted">+540 upvotes · Social</span>
+            </li>
+          </ul>
+                  <div style="margin-top:.8rem; font-size:.9rem">
+      <a href="leaderboard.html" style="color:var(--accent)">View more</a>
+    </div>
+        </div>
+      </aside>
+    </div>
+
+  </header>
+
+
+  <!-- ======================= PROJECTS ======================= -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-head">
+        <h2>Featured Projects</h2>
+        <p class="muted">Real work from real courses. Filter by <em>course</em>, <em>stack</em>, or <em>impact</em>.</p>
+      </div>
+
+      <div class="grid projects">
+        <!-- Card 1 -->
+        <article class="card project" aria-label="HealthTrack+ project">
+          <div class="top">
+            <div class="title">HealthTrack+ (React · Flask)</div>
+            <span class="badge">Course‑backed</span>
+          </div>
+          <div class="tags">
+            <span class="tag">Course: Web Dev II</span>
+            <span class="tag">Stack: MERN</span>
+            <span class="tag">Impact: Health</span>
+          </div>
+          <p class="muted" style="margin:.4rem 0 .6rem">CS × Biotech collab app for daily vitals with insights. Built for a hackathon.</p>
+          <div class="metrics">
+            <span title="Stars on GitHub">★ 132</span>
+            <span>Forks 24</span>
+            <span>Demo ▶︎</span>
+          </div>
+          <div class="actions">
+            <a class="btn ghost" href="repo.html">View repo</a>
+            <a class="btn" href="livedemo.html">Live demo</a>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="card project" aria-label="CampusJobs ML Recommender">
+          <div class="top">
+            <div class="title">CampusJobs ML Recommender</div>
+            <span class="badge">Local</span>
+          </div>
+          <div class="tags">
+            <span class="tag">Course: ML Foundations</span>
+            <span class="tag">Stack: Python</span>
+            <span class="tag">Internships</span>
+          </div>
+          <p class="muted" style="margin:.4rem 0 .6rem">Lightweight recommender for nearby internships using TF‑IDF over project tags.</p>
+          <div class="metrics">
+            <span>Accuracy 82%</span>
+            <span>Issues 5</span>
+            <span>Demo ▶︎</span>
+          </div>
+          <div class="actions">
+            <a class="btn ghost" href="repo.html">View repo</a>
+            <a class="btn" href="livedemo.html">Live demo</a>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="card project" aria-label="ProjectZone Collab Finder">
+          <div class="top">
+            <div class="title">ProjectZone Collab Finder</div>
+            <span class="badge">Collab</span>
+          </div>
+          <div class="tags">
+            <span class="tag">Course: Software Eng.</span>
+            <span class="tag">Stack: Node.js</span>
+            <span class="tag">Team‑up</span>
+          </div>
+          <p class="muted" style="margin:.4rem 0 .6rem">Find interdisciplinary teammates based on skills, availability, and location.</p>
+          <div class="metrics">
+            <span>Matches ↑ 37%</span>
+            <span>Stars 56</span>
+            <span>Demo ▶︎</span>
+          </div>
+          <div class="actions">
+            <a class="btn ghost" href="repo.html">View repo</a>
+            <a class="btn" href="livedemo.html">Live demo</a>
+          </div>
+        </article>
+
+        <!-- Card 4 -->
+        <article class="card project" aria-label="NGO Volunteering Portal">
+          <div class="top">
+            <div class="title">NGO Volunteering Portal</div>
+            <span class="badge">NGO</span>
+          </div>
+          <div class="tags">
+            <span class="tag">Course: DBMS</span>
+            <span class="tag">Stack: Express + MongoDB</span>
+            <span class="tag">Impact: Social</span>
+          </div>
+          <p class="muted" style="margin:.4rem 0 .6rem">NGOs post projects, students apply, contribute, and earn verified badges.</p>
+          <div class="metrics">
+            <span>Orgs 12</span>
+            <span>Applicants 140</span>
+            <span>Demo ▶︎</span>
+          </div>
+          <div class="actions">
+            <a class="btn ghost" href="repo.html">View repo</a>
+            <a class="btn" href="livedemo.html">Live demo</a>
+          </div>
+        </article>
+
+        <!-- Card 5 -->
+        <article class="card project" aria-label="AI‑Content Filter (Prototype)">
+          <div class="top">
+            <div class="title">AI‑Content Filter (Prototype)</div>
+            <span class="badge">Research</span>
+          </div>
+          <div class="tags">
+            <span class="tag">Course: NLP</span>
+            <span class="tag">Stack: Python + TF</span>
+            <span class="tag">Trust & Safety</span>
+          </div>
+          <p class="muted" style="margin:.4rem 0 .6rem">Classifier prototype to downrank AI‑like content and highlight authentic posts.</p>
+          <div class="metrics">
+            <span>F1 0.74</span>
+            <span>Dataset 8k</span>
+            <span>Demo ▶︎</span>
+          </div>
+          <div class="actions">
+            <a class="btn ghost" href="repo.html">View repo</a>
+            <a class="btn" href="livedemo.html">Live demo</a>
+          </div>
+        </article>
+
+        <!-- Card 6 -->
+        <article class="card project" aria-label="PeerDeck Profile Theme">
+          <div class="top">
+            <div class="title">PeerDeck Profile Theme</div>
+            <span class="badge">UI</span>
+          </div>
+          <div class="tags">
+            <span class="tag">Course: HCI</span>
+            <span class="tag">Stack: HTML · CSS</span>
+            <span class="tag">UX</span>
+          </div>
+          <p class="muted" style="margin:.4rem 0 .6rem">Project‑first profile layout with code, demo, and short video sections.</p>
+          <div class="metrics">
+            <span>Clones 32</span>
+            <span>Issues 2</span>
+            <span>Demo ▶︎</span>
+          </div>
+          <div class="actions">
+            <a class="btn ghost" href="repo.html">View repo</a>
+            <a class="btn" href="livedemo.html">Live demo</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= RECRUITER & PROJECTZONE ======================= -->
+  <section id="recruiters">
+    <div class="container row">
+      <div class="card feature">
+        <h3>Recruiter Match</h3>
+        <p class="muted">Search 
+          <strong>projects</strong> instead of resumes. Filter by course, stack, and verified work.
+        </p>
+        <div class="actions">
+          <a class="btn" href="rec.html">Open recruiter console</a>
+          <span class="pill">Talent nearby · Live demos</span>
+        </div>
+      </div>
+      <div class="card feature" id="projectzone">
+        <h3>ProjectZone — Interdisciplinary</h3>
+        <p class="muted">Team up across departments. Create a project, set skills & availability, and match automatically.</p>
+        <div class="actions">
+          <a class="btn success" href="#">Create a collab</a>
+          <a class="btn ghost" href="#">Browse open collabs</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- ======================= FOOTER ======================= -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap">
+      <div style="display:flex; align-items:center; gap:.6rem">
+        <div class="brand-mark" aria-hidden="true" style="width:24px; height:24px; border-radius:8px"></div>
+        <span>© <span id="year"></span> PeerDeck</span>
+      </div>
+      <div style="display:flex; gap:1rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // tiny helper for current year
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

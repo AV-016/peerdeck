@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · User Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: rgba(16,17,26,0.75);
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --radius-lg: 16px;
+    }
+    body {
+      margin:0;
+      font-family:Inter,sans-serif;
+      background:linear-gradient(135deg,#0b0b12 0%,#151627 100%);
+      color:var(--text);
+      display:flex;
+      flex-direction:column;
+      min-height:100vh;
+    }
+    a {color:var(--accent); text-decoration:none;}
+    
+    /* Navbar */
+    .navbar {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 2rem; background:#10111a; border-bottom:1px solid var(--stroke);
+      position:sticky; top:0; z-index:100;
+    }
+    .navbar .logo {font-weight:700; font-size:1.3rem; color:white;}
+    .navbar nav a {margin:0 1rem; font-weight:500; transition:.2s;}
+    .navbar nav a:hover {color:var(--accent);}
+
+    /* Layout */
+    .layout {display:grid; grid-template-columns:3fr 1fr; gap:2rem; padding:2rem; flex:1;}
+
+    /* Profile Header */
+    .profile-banner {
+      background:url('https://images.unsplash.com/photo-1531297484001-80022131f5a1?fit=crop&w=1200&q=80') center/cover no-repeat;
+      height:200px; border-radius:0 0 var(--radius-lg) var(--radius-lg);
+      position:relative; overflow:hidden;
+    }
+    .profile-banner::after {
+      content:""; position:absolute; inset:0;
+      background:linear-gradient(180deg,transparent 60%,rgba(0,0,0,0.7));
+    }
+    .profile-header {
+      text-align:center; margin-top:-70px; position:relative; z-index:2;
+    }
+    .avatar {
+      width:120px; height:120px; border-radius:50%; background:#2c2f4a;
+      margin:auto; display:flex; align-items:center; justify-content:center;
+      font-size:2.2rem; font-weight:600; color:white;
+      border:4px solid var(--accent);
+      box-shadow:0 8px 20px rgba(124,123,255,.4);
+      transition:.3s;
+    }
+    .avatar:hover {transform:scale(1.07);}
+    .name {font-size:1.8rem; font-weight:700; margin-top:.8rem;}
+    .username {color:var(--muted); font-size:.95rem;}
+    .bio {margin-top:.6rem; font-size:1rem; color:var(--muted);}
+    .stats {display:flex; justify-content:center; gap:2.5rem; margin-top:1.2rem;}
+    .stat {text-align:center;}
+    .stat h3 {margin:0; font-size:1.3rem; color:var(--accent);}
+    .stat p {margin:0; font-size:.85rem; color:var(--muted);}
+    .edit-btn {
+      margin-top:1rem; padding:.5rem 1.2rem; border:none; border-radius:var(--radius-lg);
+      background:var(--accent); color:white; font-weight:600; cursor:pointer;
+      transition:.2s;
+    }
+    .edit-btn:hover {box-shadow:0 0 15px var(--accent);}
+
+    /* Tabs */
+    .tabs {display:flex; gap:1rem; margin-top:2rem; border-bottom:1px solid var(--stroke);}
+    .tab {
+      padding:.8rem 1.3rem; cursor:pointer; font-weight:600; color:var(--muted);
+      border-radius:var(--radius-lg) var(--radius-lg) 0 0; transition:.3s;
+    }
+    .tab.active {
+      color:white; background:var(--panel); backdrop-filter:blur(12px);
+      border:1px solid var(--stroke); border-bottom:none;
+    }
+
+    /* Content Grid */
+    .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(270px,1fr)); gap:1.5rem; margin-top:2rem;}
+    .card {
+      background:var(--panel); border:1px solid var(--stroke); border-radius:var(--radius-lg);
+      padding:1.2rem; box-shadow:0 4px 20px rgba(0,0,0,0.35);
+      transition:.3s; backdrop-filter:blur(10px);
+    }
+    .card:hover {transform:translateY(-4px); box-shadow:0 6px 25px rgba(124,123,255,.3);}
+    .card h3 {margin-top:0;}
+    .card p {color:var(--muted); font-size:.9rem;}
+    .open-btn {
+      margin-top:1rem; padding:.5rem 1rem; background:var(--accent);
+      border:none; border-radius:10px; color:white; cursor:pointer; font-weight:600;
+    }
+    .open-btn:hover {opacity:.9;}
+
+    /* Sidebar */
+    .sidebar {display:flex; flex-direction:column; gap:1.5rem;}
+    .side-box {
+      background:var(--panel); border:1px solid var(--stroke);
+      border-radius:var(--radius-lg); padding:1rem; backdrop-filter:blur(10px);
+    }
+    .side-box h3 {margin:0 0 1rem; font-size:1.1rem;}
+    .side-item {margin-bottom:.7rem; font-size:.9rem;}
+    .side-item span {color:var(--accent);}
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">PeerDeck</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="explore.html">Explore</a>
+      <a href="post.html">Post</a>
+      <a href="profile.html">Profile</a>
+    </nav>
+  </header>
+
+  <!-- Profile Banner -->
+  <div class="profile-banner"></div>
+
+  <!-- Layout -->
+  <div class="layout">
+
+    <!-- Left Main -->
+    <div>
+      <div class="profile-header">
+        <div class="avatar">AS</div>
+        <div class="name">Aryan Sharma</div>
+        <div class="username">@aryan_dev</div>
+        <div class="bio">🚀 AI/ML Enthusiast | Building cool projects | Open-source contributor</div>
+        <div class="stats">
+          <div class="stat"><h3>12</h3><p>Projects</p></div>
+          <div class="stat"><h3>350</h3><p>Followers</p></div>
+          <div class="stat"><h3>290</h3><p>Following</p></div>
+          <div class="stat"><h3>1.2k</h3><p>Upvotes</p></div>
+        </div>
+        <button class="edit-btn" onclick="window.location.href='edit.html'">Edit Profile</button>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab active" onclick="showTab('projects')">Projects</div>
+        <div class="tab" onclick="showTab('achievements')">Achievements</div>
+        <div class="tab" onclick="showTab('connections')">Connections</div>
+        <div class="tab" onclick="showTab('activity')">Recent Activity</div>
+      </div>
+
+      <!-- Projects -->
+      <div id="projects" class="grid tab-content">
+        <div class="card">
+          <h3>Smart Farming IoT</h3>
+          <p>IoT sensors and AI to improve crop yield.</p>
+          <button class="open-btn" onclick="window.location.href='explore.html#farming'">Open Project</button>
+        </div>
+        <div class="card">
+          <h3>Health AI Assistant</h3>
+          <p>Chatbot to predict and guide basic medical queries.</p>
+          <button class="open-btn" onclick="window.location.href='explore.html#health'">Open Project</button>
+        </div>
+        <div class="card">
+          <h3>Blockchain Voting</h3>
+          <p>Secure decentralized voting system.</p>
+          <button class="open-btn" onclick="window.location.href='explore.html#voting'">Open Project</button>
+        </div>
+      </div>
+
+      <!-- Achievements -->
+      <div id="achievements" class="grid tab-content" style="display:none;">
+        <div class="card"><h3>🏆 Hackathon Winner</h3><p>Won Smart India Hackathon 2025 in AI category.</p></div>
+        <div class="card"><h3>🎤 Speaker</h3><p>Invited speaker at MLConf 2024.</p></div>
+      </div>
+
+      <!-- Connections -->
+      <div id="connections" class="grid tab-content" style="display:none;">
+        <div class="card"><h3>@ritika_dev</h3><p>Frontend Engineer | React | Open source</p></div>
+        <div class="card"><h3>@john_d</h3><p>Data Scientist | TensorFlow | AI Research</p></div>
+      </div>
+
+      <!-- Activity -->
+      <div id="activity" class="grid tab-content" style="display:none;">
+        <div class="card"><h3>🔺 Rahul upvoted your project</h3><p>Smart Farming IoT received +1 upvote</p></div>
+        <div class="card"><h3>👥 Ritika started following you</h3><p>You gained a new follower</p></div>
+        <div class="card"><h3>💬 John commented</h3><p>"This is really innovative!" on Health AI Assistant</p></div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar">
+      <div class="side-box">
+        <h3>🔥 Trending Projects</h3>
+        <div class="side-item"><span>Smart Farming IoT</span> - 120 upvotes</div>
+        <div class="side-item"><span>AI Tutor</span> - 98 upvotes</div>
+        <div class="side-item"><span>Health Assistant</span> - 87 upvotes</div>
+      </div>
+      <div class="side-box">
+        <h3>🏆 Leaderboard</h3>
+        <div class="side-item"><span>@aryan_dev</span> - 12 projects</div>
+        <div class="side-item"><span>@ritika_dev</span> - 10 projects</div>
+        <div class="side-item"><span>@john_d</span> - 8 projects</div>
+      </div>
+    </aside>
+  </div>
+
+  <script>
+    function showTab(tabId) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+      document.getElementById(tabId).style.display = 'grid';
+      event.target.classList.add('active');
+    }
+  </script>
+</body>
+</html>

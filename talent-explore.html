@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Talent Explorer · PeerDeck</title>
+  <style>
+    body {margin:0; font-family:Inter,sans-serif; background:linear-gradient(135deg,#0b0b12,#16162a); color:#e8eaf1;}
+    nav {display:flex; justify-content:space-between; padding:1rem 2rem; background:#10111a; border-bottom:1px solid #202441;}
+    nav .logo {font-weight:700; font-size:1.2rem; color:#7c7bff;}
+    nav .links a {margin-left:1.5rem; text-decoration:none; color:#e8eaf1;}
+    .container {width:min(1100px,92vw); margin:auto; padding:2rem;}
+    .filters {background:#10111a; padding:1rem; border-radius:12px; margin-bottom:1.5rem;}
+    input, select {padding:.5rem; border-radius:8px; border:1px solid #202441; background:#181927; color:white;}
+    .profiles {display:grid; grid-template-columns:1fr 1fr; gap:1rem;}
+    .card {background:#10111a; border:1px solid #202441; border-radius:12px; padding:1rem;}
+    .btn {display:inline-block; margin-top:.5rem; padding:.5rem 1rem; background:#7c7bff; border-radius:8px; color:white; text-decoration:none;}
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">PeerDeck</div>
+    <div class="links">
+      <a href="index.html">Dashboard</a>
+      <a href="post-job.html">Post Job</a>
+      <a href="talent-explore.html">Talent Explorer</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Talent Explorer</h1>
+    <div class="filters">
+      <label>Filter by Skill:</label>
+      <input type="text" placeholder="e.g., Python">
+      <label>Location:</label>
+      <input type="text" placeholder="e.g., Delhi">
+    </div>
+    <div class="profiles">
+      <div class="card">
+        <h3>Ritika · ML Engineer</h3>
+        <p>Skills: Python, TensorFlow, NLP</p>
+        <p>Project: AI Health Assistant</p>
+        <a class="btn" href="candidate.html">View Profile</a>
+      </div>
+      <div class="card">
+        <h3>Arjun · Full Stack Dev</h3>
+        <p>Skills: React, Node.js, MongoDB</p>
+        <p>Project: Smart Farming IoT</p>
+        <a class="btn" href="candidate.html">View Profile</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Recruiter Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient: linear-gradient(135deg, #0b0b12 0%, #16162a 100%);
+      --panel: #10111a;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --radius-lg: 14px;
+    }
+    body {
+      margin:0; font-family:Inter,sans-serif;
+      background:var(--bg-gradient);
+      color:var(--text);
+    }
+
+    /* Navbar */
+    nav {
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 2rem; background:#0d0d18; border-bottom:1px solid var(--stroke);
+    }
+    nav .logo {font-weight:700; font-size:1.2rem; color:var(--accent);}
+    nav .nav-links {display:flex; gap:1.5rem;}
+    nav .nav-links a {color:var(--muted); text-decoration:none; font-weight:500;}
+    nav .nav-links a:hover {color:var(--text);}
+
+    .container {width:min(1200px,92vw); margin-inline:auto; padding:2rem;}
+    h1 {margin-bottom:1rem;}
+
+    .grid {display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:1.5rem;}
+
+    .card {
+      background:var(--panel); border:1px solid var(--stroke);
+      border-radius:var(--radius-lg); padding:1.5rem;
+      box-shadow:0 4px 10px rgba(0,0,0,0.4);
+    }
+
+    .stat {font-size:2rem; font-weight:700; color:var(--accent);}
+    .stat-label {color:var(--muted); font-size:.9rem;}
+
+    h2 {margin-top:2rem; margin-bottom:.8rem; font-size:1.3rem;}
+
+    /* Leaderboard style */
+    .leaderboard li {
+      display:flex; justify-content:space-between;
+      padding:.6rem 0; border-bottom:1px solid var(--stroke);
+    }
+    .leaderboard li:last-child {border-bottom:none;}
+    .leaderboard .name {font-weight:500;}
+
+    /* Recent activity */
+    .activity li {
+      padding:.6rem 0; border-bottom:1px solid var(--stroke);
+      font-size:.9rem; color:var(--muted);
+    }
+    .activity li strong {color:var(--text);}
+    .activity li:last-child {border-bottom:none;}
+
+    /* "See more" links */
+    .see-more {
+      display:block; text-align:right;
+      margin-top:.6rem; font-size:.85rem;
+      color:var(--accent); cursor:pointer;
+    }
+    .see-more:hover {text-decoration:underline;}
+
+    /* Floating post job button */
+    .post-job-btn {
+      position:fixed; bottom:30px; right:30px;
+      background:var(--accent); color:#fff;
+      border:none; border-radius:50px;
+      padding:.9rem 1.4rem; font-weight:600;
+      cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.4);
+      transition:.2s;
+    }
+    .post-job-btn:hover {opacity:.9; transform:translateY(-3px);}
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+   
+    <div class="logo">PeerDeck Recruiter</div>
+    <div class="nav-links">
+           <a href="index.html">Home</a>
+      <a href="rec.html">Dashboard</a>
+      <a href="talent-explore.html">Talent Explorer</a>
+      <a href="post-job.html">Post Job</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h1>Recruiter Dashboard</h1>
+
+    <!-- Quick Stats -->
+    <div class="grid">
+      <div class="card">
+        <div class="stat">12</div>
+        <div class="stat-label">Job Posts</div>
+      </div>
+      <div class="card">
+        <div class="stat">89</div>
+        <div class="stat-label">Applicants</div>
+      </div>
+      <div class="card">
+        <div class="stat">15</div>
+        <div class="stat-label">Shortlisted</div>
+      </div>
+    </div>
+
+    <!-- Trending Projects -->
+    <h2> Trending Student Projects</h2>
+    <div class="card">
+      <ul class="leaderboard">
+        <li><span class="name">Smart Farming IoT</span><span>⭐ 1200 upvotes</span></li>
+        <li><span class="name">AI Health Assistant</span><span>⭐ 950 upvotes</span></li>
+        <li><span class="name">Blockchain Voting System</span><span>⭐ 870 upvotes</span></li>
+      </ul>
+      <span class="see-more">See more →</span>
+    </div>
+
+<style>
+  :root {
+    --text: #e8eaf1;
+    --muted: #a6abc3;
+    --accent: #7c7bff;
+    --panel: #10111a;
+    --stroke: #202441;
+    --radius-lg: 14px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  .leaderboard {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.8rem;
+  }
+  .leaderboard li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  .leaderboard .name {
+    font-weight: 600;
+    color: var(--text);
+  }
+  .see-more {
+    display: inline-block;
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s;
+    cursor: pointer;
+  }
+  .see-more:hover {
+    color: var(--accent);
+  }
+</style>
+<div class="card">
+  <h2>Top Candidates Leaderboard</h2>
+  <ul class="leaderboard">
+    <li><span class="name">Aryan Sharma</span><span>ML / AI</span></li>
+    <li><span class="name">Ritika Verma</span><span>Full Stack</span></li>
+    <li><span class="name">John D.</span><span>IoT Engineer</span></li>
+  </ul>
+  <a class="see-more" href="leaderboard.html">See more →</a>
+</div>
+    <!-- Recent Applications -->
+    <h2> Recent Applications</h2>
+    <div class="card">
+      <ul class="activity">
+        <li><strong>Ritika</strong> applied for <strong>AI Research Intern</strong></li>
+        <li><strong>John</strong> applied for <strong>IoT Developer</strong></li>
+        <li><strong>Sonia</strong> applied for <strong>Blockchain Analyst</strong></li>
+      </ul>
+      <span class="see-more">See more →</span>
+    </div>
+  </div>
+
+<!-- Floating Button -->
+<a href="post-job.html" class="post-job-btn"> Post Job</a>
+
+<style>
+  .post-job-btn {
+    position:fixed; 
+    bottom:30px; 
+    right:30px;
+    background:var(--accent); 
+    color:#fff;
+    text-decoration:none;
+    border:none; 
+    border-radius:50px;
+    padding:.9rem 1.6rem; 
+    font-weight:600;
+    font-size:1rem;
+    cursor:pointer; 
+    box-shadow:0 4px 12px rgba(0,0,0,0.4);
+    transition:.2s;
+  }
+  .post-job-btn:hover {
+    opacity:.9; 
+    transform:translateY(-3px);
+  }
+</style>
+ 
+</style>
+
+</body>
+</html>
