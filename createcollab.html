@@ -58,23 +58,6 @@
     .user-btn { padding: .6rem 1.2rem; border-radius: var(--radius-sm); background: var(--gradient); color: white; font-weight: 600; cursor: pointer; transition: all .3s ease; }
     .user-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(124,123,255,.4); animation: pulse 1.5s infinite; }
 
-    /* Tab Bar */
-    .tab-bar {
-      display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0;
-      overflow-x: auto; white-space: nowrap; padding-bottom: .5rem;
-      scrollbar-width: thin; scrollbar-color: var(--accent) var(--panel);
-    }
-    .tab-bar::-webkit-scrollbar { height: 6px; }
-    .tab-bar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-    .tab-bar::-webkit-scrollbar-track { background: var(--panel); }
-    .tab {
-      padding: .6rem 1.2rem; border-radius: var(--radius-sm); background: rgba(24,25,39,.8);
-      border: 1px solid var(--stroke); color: var(--muted); font-size: .9rem; font-weight: 600;
-      cursor: pointer; transition: all .3s ease;
-    }
-    .tab:hover { color: var(--text); border-color: var(--accent); transform: translateY(-2px); }
-    .tab.active { background: var(--gradient); color: white; border-color: transparent; box-shadow: 0 4px 15px rgba(124,123,255,.4); }
-
     /* Collab Section */
     .collab-section { padding: 2rem 0; }
     h1 { font-size: clamp(2rem, 3.5vw + 1rem, 3rem); margin: 0 0 1.5rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 2px 10px rgba(124,123,255,.3); }
@@ -115,10 +98,8 @@
     .skills-match { font-size: .85rem; color: var(--success); margin-top: .3rem; display: none; }
     .skills-match.active { display: block; }
 
-    /* Project Sections */
-    .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; opacity: 0; transition: opacity .5s ease, transform .5s ease; transform: translateY(10px); }
-    .project-grid.visible { display: grid; opacity: 1; transform: translateY(0); }
-    .project-grid.hidden { display: none; opacity: 0; transform: translateY(10px); }
+    /* New Sections */
+    .project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
     .project-card { background: var(--panel); border: 1px solid var(--stroke); border-radius: var(--radius-md); padding: 1.2rem; transition: transform .3s ease, box-shadow .3s ease; }
     .project-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(124,123,255,.3); }
     .project-card h3 { font-size: 1.2rem; margin: 0 0 .8rem; color: var(--text); }
@@ -135,6 +116,8 @@
     .person-card img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: .8rem; border: 2px solid var(--accent); }
     .person-card h4 { font-size: 1rem; margin: 0 0 .4rem; color: var(--text); }
     .person-card p { font-size: .85rem; color: var(--muted); margin: 0; }
+    .toggle-btn { background: transparent; border: none; color: var(--accent); font-size: .9rem; cursor: pointer; margin: 1rem 0; }
+    .toggle-btn:hover { text-decoration: underline; }
 
     /* Burger Menu */
     .burger { display: none; font-size: 1.8rem; cursor: pointer; color: var(--muted); transition: color .3s ease; }
@@ -155,7 +138,6 @@
       .burger { display: block; }
       .project-grid { grid-template-columns: 1fr; }
       .people-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); }
-      .tab-bar { flex-wrap: nowrap; overflow-x: auto; }
     }
     @media (max-width: 680px) {
       .collab-section { padding: 1.5rem 0; }
@@ -165,7 +147,6 @@
       .container { padding: 1.2rem 0; }
       .btn { padding: .7rem 1.2rem; font-size: .9rem; }
       .project-card, .person-card { padding: 1rem; }
-      .tab { padding: .5rem 1rem; font-size: .85rem; }
     }
   </style>
 </head>
@@ -213,17 +194,13 @@
           </div>
         </div>
 
-        <!-- Project Tabs -->
-        <div class="tab-bar">
-          <div class="tab" data-project="ongoingProjects">Ongoing Projects</div>
-          <div class="tab" data-project="previousProjects">Previous Projects</div>
-        </div>
-
         <!-- Ongoing Projects -->
-        <div class="project-grid hidden" id="ongoingProjects"></div>
+        <h2>Ongoing Projects <button class="toggle-btn" id="toggleOngoingProjects">Show</button></h2>
+        <div class="project-grid" id="ongoingProjects" style="display: none;"></div>
 
         <!-- Previous Projects -->
-        <div class="project-grid hidden" id="previousProjects"></div>
+        <h2>Previous Projects <button class="toggle-btn" id="togglePreviousProjects">Show</button></h2>
+        <div class="project-grid" id="previousProjects" style="display: none;"></div>
 
         <!-- Top Skilled People -->
         <h2>Our Top Contributors</h2>
@@ -465,18 +442,22 @@
       `).join('');
     }
 
-    // Toggle Project Grids
-    document.querySelectorAll('.tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        const projectId = tab.getAttribute('data-project');
-        const projectGrid = document.getElementById(projectId);
-        const isHidden = projectGrid.classList.contains('hidden');
+    // Toggle Ongoing Projects
+    document.getElementById('toggleOngoingProjects').addEventListener('click', () => {
+      const ongoingProjectsDiv = document.getElementById('ongoingProjects');
+      const toggleBtn = document.getElementById('toggleOngoingProjects');
+      const isHidden = ongoingProjectsDiv.style.display === 'none';
+      ongoingProjectsDiv.style.display = isHidden ? 'grid' : 'none';
+      toggleBtn.textContent = isHidden ? 'Hide' : 'Show';
+    });
 
-        // Toggle visibility
-        projectGrid.classList.toggle('visible', isHidden);
-        projectGrid.classList.toggle('hidden', !isHidden);
-        tab.classList.toggle('active', isHidden);
-      });
+    // Toggle Previous Projects
+    document.getElementById('togglePreviousProjects').addEventListener('click', () => {
+      const previousProjectsDiv = document.getElementById('previousProjects');
+      const toggleBtn = document.getElementById('togglePreviousProjects');
+      const isHidden = previousProjectsDiv.style.display === 'none';
+      previousProjectsDiv.style.display = isHidden ? 'grid' : 'none';
+      toggleBtn.textContent = isHidden ? 'Hide' : 'Show';
     });
 
     // Join Collab Form

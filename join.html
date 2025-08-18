@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PeerDeck · Collaborations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0b12;
+      --panel: #10111a;
+      --elev: #151628;
+      --text: #e8eaf1;
+      --muted: #a6abc3;
+      --stroke: #202441;
+      --accent: #7c7bff;
+      --accent-2: #10c7b6;
+      --accent-3: #ff6db4;
+      --success: #28a745;
+      --radius-xl: 24px;
+      --radius-lg: 16px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-1: 0 12px 40px rgba(0,0,0,.5);
+      --gradient: linear-gradient(135deg, var(--accent), var(--accent-2), var(--accent-3));
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      background: radial-gradient(1000px 500px at 10% -10%, rgba(124,123,255,.25), transparent 50%),
+                  radial-gradient(1000px 500px at 90% 0%, rgba(16,199,182,.25), transparent 50%), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    .container { width: min(1280px, 94vw); margin-inline: auto; padding: 1.2rem 0; }
+    .main-content { width: 100%; }
+
+    /* Navbar */
+    .nav {
+      position: sticky; top: 0; z-index: 50;
+      backdrop-filter: blur(12px);
+      background: color-mix(in srgb, var(--panel) 90%, transparent);
+      border-bottom: 1px solid var(--stroke);
+      box-shadow: 0 2px 10px rgba(0,0,0,.3);
+    }
+    .nav-inner { display: flex; align-items: center; justify-content: space-between; padding: .8rem 0; }
+    .brand-title { font-size: 1.6rem; font-weight: 800; letter-spacing: .3px; color: var(--text); }
+    .nav-links { display: flex; gap: .8rem; align-items: center; }
+    .nav-links a { padding: .5rem 1rem; border-radius: var(--radius-sm); color: var(--muted); transition: all .3s ease; }
+    .nav-links a:hover { color: var(--text); background: rgba(124,123,255,.15); transform: translateY(-2px); }
+    .user-btn { padding: .5rem 1rem; border-radius: var(--radius-sm); background: var(--gradient); color: white; font-weight: 600; cursor: pointer; transition: all .3s ease; }
+    .user-btn:hover { transform: scale(1.05); box-shadow: 0 4px 15px rgba(124,123,255,.4); }
+
+    /* Tab Bar */
+    .tab-bar {
+      display: flex; gap: .5rem; flex-wrap: wrap; margin: 1rem 0;
+      overflow-x: auto; white-space: nowrap; padding-bottom: .5rem;
+      scrollbar-width: thin; scrollbar-color: var(--accent) var(--panel);
+    }
+    .tab-bar::-webkit-scrollbar { height: 6px; }
+    .tab-bar::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+    .tab-bar::-webkit-scrollbar-track { background: var(--panel); }
+    .tab {
+      padding: .6rem 1.2rem; border-radius: var(--radius-sm); background: rgba(24,25,39,.8);
+      border: 1px solid var(--stroke); color: var(--muted); font-size: .9rem; font-weight: 600;
+      cursor: pointer; transition: all .3s ease;
+    }
+    .tab:hover { color: var(--text); border-color: var(--accent); transform: translateY(-2px); }
+    .tab.active { background: var(--gradient); color: white; border-color: transparent; box-shadow: 0 4px 15px rgba(124,123,255,.4); }
+
+    /* Collab Section */
+    .collab-section { padding: 1.2rem 0; }
+    h1 { font-size: clamp(1.8rem, 3vw + 1rem, 2.5rem); margin: 0 0 1rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 2px 10px rgba(124,123,255,.3); }
+    .collab-card { border: 1px solid var(--stroke); background: linear-gradient(145deg, #121327, #0e0f1f); border-radius: var(--radius-lg); padding: 1.2rem; box-shadow: var(--shadow-1); position: relative; transition: transform .3s ease, box-shadow .3s ease; }
+    .collab-card:hover { transform: translateY(-5px); box-shadow: 0 15px 50px rgba(124,123,255,.3); }
+    .collab-card::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: var(--gradient); border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .collab-head { font-size: 1.2rem; font-weight: 700; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; }
+    label { display: block; margin: .6rem 0 .3rem; font-weight: 600; font-size: .9rem; color: var(--text); }
+    input, textarea, select {
+      width: 100%; padding: .8rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--stroke);
+      background: rgba(24,25,39,.8); color: var(--text); font-size: .9rem; transition: border-color .3s, box-shadow .3s;
+    }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 8px rgba(124,123,255,.3); outline: none; }
+    textarea { min-height: 100px; resize: vertical; }
+    .btn {
+      padding: .8rem 1.5rem; border: none; border-radius: var(--radius-sm); background: var(--success);
+      color: white; font-size: .9rem; font-weight: 600; cursor: pointer; transition: all .3s ease; box-shadow: 0 4px 15px rgba(40,167,69,.4);
+    }
+    .btn:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(40,167,69,.6); }
+    .secondary-btn {
+      background: transparent; border: 1px solid var(--stroke); color: var(--muted);
+      box-shadow: none;
+    }
+    .secondary-btn:hover { color: var(--text); border-color: var(--accent); box-shadow: 0 4px 15px rgba(124,123,255,.3); transform: translateY(-3px); }
+    .browse-collabs, .create-collab, .requested-collabs, .pending-collabs { display: none; opacity: 0; transition: opacity .5s ease; }
+    .visible { display: block; opacity: 1; }
+    .hidden { display: none; opacity: 0; }
+    .section-title { font-size: 1.1rem; font-weight: 600; margin: 1rem 0 .6rem; color: var(--text); }
+    .collab-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .8rem; }
+    .collab-item { padding: 1rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: var(--panel); transition: all .3s ease; }
+    .collab-item:hover { background: rgba(124,123,255,.05); transform: translateY(-3px); }
+    .collab-item h3 { margin: 0 0 .4rem; font-size: 1.1rem; }
+    .collab-item p { font-size: .85rem; color: var(--muted); margin: 0 0 .4rem; }
+    .error { color: var(--accent-3); font-size: .8rem; margin-top: .2rem; display: none; }
+    .pill { display: inline-flex; align-items: center; padding: .3rem .6rem; border-radius: 999px; background: rgba(124,123,255,.15); color: var(--muted); font-size: .8rem; margin: .4rem 0; }
+    .search-bar { padding: .7rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--stroke); background: rgba(24,25,39,.8); width: 100%; margin-bottom: .8rem; }
+    .preview-card, .edit-card { display: none; margin-top: 1rem; padding: 1rem; border: 1px solid var(--stroke); border-radius: var(--radius-md); background: var(--panel); }
+    .preview-card.active, .edit-card.active { display: block; }
+
+    /* Burger Menu */
+    .burger { display: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
+    .nav-links.active { display: flex; flex-direction: column; position: absolute; top: 100%; left: 0; right: 0; background: var(--panel); padding: 1rem; border-bottom: 1px solid var(--stroke); }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .collab-card, .collab-item { animation: fadeIn 0.5s ease-out; }
+
+    /* Responsive */
+    @media (max-width: 960px) {
+      .nav-links { display: none; }
+      .nav-links.active { display: flex; }
+      .burger { display: block; }
+      .tab-bar { flex-wrap: nowrap; overflow-x: auto; }
+    }
+    @media (max-width: 680px) {
+      .collab-section { padding: 1rem 0; }
+      h1 { font-size: 1.6rem; }
+      .collab-card, .collab-item { padding: 1rem; }
+      .container { padding: 1rem 0; }
+      .tab { padding: .5rem 1rem; font-size: .85rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="nav">
+    <div class="container nav-inner">
+      <div class="brand-title">PeerDeck</div>
+      <div class="burger">☰</div>
+      <div class="nav-links">
+        <a href="feed.html">Feed</a>
+        <a href="explore.html">Projects</a>
+        <a href="explore.html">ProjectZone</a>
+        <a href="#recruiters">For Recruiters</a>
+        <a class="user-btn" href="profile.html">User</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Tab Bar -->
+  <div class="container">
+    <div class="tab-bar">
+      <div class="tab active" data-section="browse-collabs">Browse Open Collabs</div>
+      <div class="tab" data-section="create-collab">Create a Collab</div>
+      <div class="tab" data-section="requested-collabs">Requested Collabs</div>
+      <div class="tab" data-section="pending-collabs">Pending Collabs</div>
+    </div>
+  </div>
+
+  <!-- Browse Open Collabs Section -->
+  <section class="collab-section browse-collabs visible" id="browse-collabs">
+    <div class="container">
+      <h1>Collaborations</h1>
+      <div class="main-content">
+        <div class="collab-card">
+          <div class="collab-head">
+            <span>Open Collaborations</span>
+            <button class="btn secondary-btn" onclick="showSection('create-collab')">Create New</button>
+          </div>
+          <input type="text" class="search-bar" id="collabSearch" placeholder="Search collabs by title, category, or tags...">
+          <div class="collab-list">
+            <div class="collab-item">
+              <h3>Eco Warriors Cleanup</h3>
+              <p>Category: Environment<br>Location: Chandigarh, India<br>Duration: 1 month<br>Slots: 8/10 filled</p>
+              <div class="pill">120 Upvotes | 15 Comments | Tags: sustainability, cleanup</div>
+              <a href="collab-details.html" class="btn">Join Collab</a>
+            </div>
+            <div class="collab-item">
+              <h3>Tech Tutors Workshop</h3>
+              <p>Category: Education<br>Location: Mohali, India<br>Duration: 6 weeks<br>Slots: 4/5 filled</p>
+              <div class="pill">85 Upvotes | 10 Comments | Tags: education, tech</div>
+              <a href="collab-details.html" class="btn">Join Collab</a>
+            </div>
+            <div class="collab-item">
+              <h3>Health Heroes Camp</h3>
+              <p>Category: Health<br>Location: Delhi, India<br>Duration: 2 weeks<br>Slots: 6/8 filled</p>
+              <div class="pill">95 Upvotes | 12 Comments | Tags: health, community</div>
+              <a href="collab-details.html" class="btn">Join Collab</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Create Collab Section -->
+  <section class="collab-section create-collab hidden" id="create-collab">
+    <div class="container">
+      <h1>Create a New Collab</h1>
+      <div class="main-content">
+        <div class="collab-card">
+          <div class="collab-head">Create Collaboration</div>
+          <form id="collabCreateForm">
+            <div>
+              <label for="collabTitle">Collab Title</label>
+              <input type="text" id="collabTitle" placeholder="e.g., Eco Warriors Cleanup" required>
+              <div class="error" id="collabTitleError">Please enter a collab title.</div>
+            </div>
+            <div>
+              <label for="collabCategory">Category</label>
+              <select id="collabCategory" required>
+                <option value="" disabled selected>Select a category</option>
+                <option value="environment">Environment</option>
+                <option value="education">Education</option>
+                <option value="health">Health</option>
+                <option value="community">Community</option>
+              </select>
+              <div class="error" id="collabCategoryError">Please select a category.</div>
+            </div>
+            <div>
+              <label for="collabDescription">Description</label>
+              <textarea id="collabDescription" placeholder="Describe the collab, goals, and impact..." required></textarea>
+              <div class="error" id="collabDescriptionError">Please provide a description.</div>
+            </div>
+            <div>
+              <label for="requiredSkills">Required Skills</label>
+              <input type="text" id="requiredSkills" placeholder="e.g., Leadership, Environmental Awareness" required>
+              <div class="error" id="requiredSkillsError">Please specify required skills.</div>
+            </div>
+            <div>
+              <label for="collabLocation">Location</label>
+              <input type="text" id="collabLocation" placeholder="e.g., Chandigarh, India" required>
+              <div class="error" id="collabLocationError">Please enter a location.</div>
+            </div>
+            <div>
+              <label for="collabStartDate">Start Date</label>
+              <input type="date" id="collabStartDate" required>
+              <div class="error" id="collabStartDateError">Please select a start date.</div>
+            </div>
+            <div>
+              <label for="collabEndDate">End Date</label>
+              <input type="date" id="collabEndDate" required>
+              <div class="error" id="collabEndDateError">Please select a valid end date.</div>
+            </div>
+            <div>
+              <label for="collabFunding">Funding Goal (₹)</label>
+              <input type="number" id="collabFunding" placeholder="e.g., 10000" min="0">
+              <div class="error" id="collabFundingError">Please enter a valid funding goal.</div>
+            </div>
+            <div>
+              <label for="collabTags">Tags (comma-separated)</label>
+              <input type="text" id="collabTags" placeholder="e.g., sustainability, community, volunteer">
+              <div class="error" id="collabTagsError">Please enter at least one tag.</div>
+            </div>
+            <div>
+              <label for="collabImage">Collab Image (optional)</label>
+              <input type="file" id="collabImage" accept="image/*">
+              <div class="error" id="collabImageError">Please upload a valid image.</div>
+            </div>
+            <div style="display: flex; gap: .8rem; margin-top: 1rem;">
+              <button type="button" class="btn secondary-btn" id="previewCollabBtn">Preview</button>
+              <button type="submit" class="btn">Create Collab</button>
+              <button type="button" class="btn secondary-btn" id="cancelCollabBtn">Cancel</button>
+            </div>
+          </form>
+          <div class="preview-card" id="collabPreview">
+            <h3 id="previewTitle">Collab Title</h3>
+            <p id="previewDetails">Description, Location, Duration, Funding Goal</p>
+            <div class="pill" id="previewMeta">Category: N/A | Tags: None</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Requested Collabs Section -->
+  <section class="collab-section requested-collabs hidden" id="requested-collabs">
+    <div class="container">
+      <h1>Requested Collabs</h1>
+      <div class="main-content">
+        <div class="collab-card">
+          <div class="collab-head">
+            <span>Your Requested Collaborations</span>
+            <button class="btn secondary-btn" onclick="showSection('browse-collabs')">Browse More</button>
+          </div>
+          <input type="text" class="search-bar" id="requestedCollabSearch" placeholder="Search requested collabs by title, category, or tags...">
+          <div class="collab-list">
+            <div class="collab-item">
+              <h3>Eco Warriors Cleanup</h3>
+              <p>Category: Environment<br>Location: Chandigarh, India<br>Duration: 1 month<br>Status: Application Submitted</p>
+              <div class="pill">120 Upvotes | 15 Comments | Tags: sustainability, cleanup</div>
+              <a href="collab-details.html" class="btn">View Status</a>
+            </div>
+            <div class="collab-item">
+              <h3>Health Heroes Camp</h3>
+              <p>Category: Health<br>Location: Delhi, India<br>Duration: 2 weeks<br>Status: Under Review</p>
+              <div class="pill">95 Upvotes | 12 Comments | Tags: health, community</div>
+              <a href="collab-details.html" class="btn">View Status</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pending Collabs Section -->
+  <section class="collab-section pending-collabs hidden" id="pending-collabs">
+    <div class="container">
+      <h1>Pending Collabs</h1>
+      <div class="main-content">
+        <div class="collab-card">
+          <div class="collab-head">
+            <span>Your Pending Collaborations</span>
+            <button class="btn secondary-btn" onclick="showSection('create-collab')">Create New</button>
+          </div>
+          <input type="text" class="search-bar" id="pendingCollabSearch" placeholder="Search pending collabs by title, category, or tags...">
+          <div class="collab-list">
+            <div class="collab-item" data-collab-id="garden-project">
+              <h3>Community Garden Project</h3>
+              <p>Category: Community<br>Location: Ludhiana, India<br>Duration: 3 months<br>Status: Pending Approval</p>
+              <div class="pill">Tags: gardening, community, sustainability</div>
+              <button class="btn" onclick="editCollab('garden-project')">Edit Collab</button>
+            </div>
+            <div class="collab-item" data-collab-id="skill-bootcamp">
+              <h3>Youth Skill Bootcamp</h3>
+              <p>Category: Education<br>Location: Amritsar, India<br>Duration: 4 weeks<br>Status: Awaiting Review</p>
+              <div class="pill">Tags: education, skills, youth</div>
+              <button class="btn" onclick="editCollab('skill-bootcamp')">Edit Collab</button>
+            </div>
+          </div>
+          <div class="edit-card" id="editCollabForm">
+            <div class="collab-head">Edit Collaboration</div>
+            <form id="collabEditForm">
+              <div>
+                <label for="editCollabTitle">Collab Title</label>
+                <input type="text" id="editCollabTitle" required>
+                <div class="error" id="editCollabTitleError">Please enter a collab title.</div>
+              </div>
+              <div>
+                <label for="editCollabCategory">Category</label>
+                <select id="editCollabCategory" required>
+                  <option value="" disabled>Select a category</option>
+                  <option value="environment">Environment</option>
+                  <option value="education">Education</option>
+                  <option value="health">Health</option>
+                  <option value="community">Community</option>
+                </select>
+                <div class="error" id="editCollabCategoryError">Please select a category.</div>
+              </div>
+              <div>
+                <label for="editCollabDescription">Description</label>
+                <textarea id="editCollabDescription" required></textarea>
+                <div class="error" id="editCollabDescriptionError">Please provide a description.</div>
+              </div>
+              <div>
+                <label for="editRequiredSkills">Required Skills</label>
+                <input type="text" id="editRequiredSkills" required>
+                <div class="error" id="editRequiredSkillsError">Please specify required skills.</div>
+              </div>
+              <div>
+                <label for="editCollabLocation">Location</label>
+                <input type="text" id="editCollabLocation" required>
+                <div class="error" id="editCollabLocationError">Please enter a location.</div>
+              </div>
+              <div>
+                <label for="editCollabStartDate">Start Date</label>
+                <input type="date" id="editCollabStartDate" required>
+                <div class="error" id="editCollabStartDateError">Please select a start date.</div>
+              </div>
+              <div>
+                <label for="editCollabEndDate">End Date</label>
+                <input type="date" id="editCollabEndDate" required>
+                <div class="error" id="editCollabEndDateError">Please select a valid end date.</div>
+              </div>
+              <div>
+                <label for="editCollabFunding">Funding Goal (₹)</label>
+                <input type="number" id="editCollabFunding" min="0">
+                <div class="error" id="editCollabFundingError">Please enter a valid funding goal.</div>
+              </div>
+              <div>
+                <label for="editCollabTags">Tags (comma-separated)</label>
+                <input type="text" id="editCollabTags">
+                <div class="error" id="editCollabTagsError">Please enter at least one tag.</div>
+              </div>
+              <div>
+                <label for="editCollabImage">Collab Image (optional)</label>
+                <input type="file" id="editCollabImage" accept="image/*">
+                <div class="error" id="editCollabImageError">Please upload a valid image.</div>
+              </div>
+              <div style="display: flex; gap: .8rem; margin-top: 1rem;">
+                <button type="submit" class="btn">Save Changes</button>
+                <button type="button" class="btn secondary-btn" id="cancelEditCollabBtn">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container" style="display:flex; justify-content:space-between; gap:1rem; align-items:center; flex-wrap:wrap; padding:1rem 0; color:var(--muted); font-size:.9rem;">
+      <span>© <span id="year"></span> PeerDeck</span>
+      <div style="display:flex; gap:.8rem">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Mock Collab Data for Edit
+    const collabData = {
+      'garden-project': {
+        title: 'Community Garden Project',
+        category: 'community',
+        description: 'Develop a community garden to promote sustainable living and local engagement.',
+        skills: 'Gardening, Community Outreach',
+        location: 'Ludhiana, India',
+        startDate: '2025-09-01',
+        endDate: '2025-12-01',
+        funding: '15000',
+        tags: 'gardening, community, sustainability'
+      },
+      'skill-bootcamp': {
+        title: 'Youth Skill Bootcamp',
+        category: 'education',
+        description: 'Empower youth with tech and leadership skills through hands-on workshops.',
+        skills: 'Teaching, Tech Skills',
+        location: 'Amritsar, India',
+        startDate: '2025-09-15',
+        endDate: '2025-10-15',
+        funding: '20000',
+        tags: 'education, skills, youth'
+      }
+    };
+
+    // Section Switching
+    const sections = ['browse-collabs', 'create-collab', 'requested-collabs', 'pending-collabs'];
+    function showSection(sectionId) {
+      sections.forEach(id => {
+        const section = document.getElementById(id);
+        section.classList.toggle('visible', id === sectionId);
+        section.classList.toggle('hidden', id !== sectionId);
+      });
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.toggle('active', tab.getAttribute('data-section') === sectionId);
+      });
+      if (sectionId !== 'create-collab' && sectionId !== 'pending-collabs') {
+        document.getElementById('collabPreview').classList.remove('active');
+        document.getElementById('collabCreateForm').reset();
+        document.getElementById('editCollabForm').parentElement.classList.remove('active');
+        document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      }
+    }
+
+    // Tab Bar Navigation
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const sectionId = tab.getAttribute('data-section');
+        showSection(sectionId);
+      });
+    });
+
+    // Collab Search
+    function setupSearch(searchId, listSelector) {
+      const searchInput = document.getElementById(searchId);
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        document.querySelectorAll(`${listSelector} .collab-item`).forEach(item => {
+          const title = item.querySelector('h3').textContent.toLowerCase();
+          const details = item.querySelector('p').textContent.toLowerCase();
+          const tags = item.querySelector('.pill').textContent.toLowerCase();
+          item.style.display = title.includes(searchTerm) || details.includes(searchTerm) || tags.includes(searchTerm) ? 'block' : 'none';
+        });
+      });
+    }
+    setupSearch('collabSearch', '.browse-collabs');
+    setupSearch('requestedCollabSearch', '.requested-collabs');
+    setupSearch('pendingCollabSearch', '.pending-collabs');
+
+    // Create Collab Form
+    const collabForm = document.getElementById('collabCreateForm');
+    const previewCollabBtn = document.getElementById('previewCollabBtn');
+    const cancelCollabBtn = document.getElementById('cancelCollabBtn');
+    const collabPreview = document.getElementById('collabPreview');
+
+    function validateForm(formId, prefix) {
+      let valid = true;
+      const title = document.getElementById(`${prefix}CollabTitle`).value.trim();
+      const category = document.getElementById(`${prefix}CollabCategory`).value;
+      const description = document.getElementById(`${prefix}CollabDescription`).value.trim();
+      const skills = document.getElementById(`${prefix}RequiredSkills`).value.trim();
+      const location = document.getElementById(`${prefix}CollabLocation`).value.trim();
+      const startDate = document.getElementById(`${prefix}CollabStartDate`).value;
+      const endDate = document.getElementById(`${prefix}CollabEndDate`).value;
+      const funding = document.getElementById(`${prefix}CollabFunding`).value.trim();
+      const tags = document.getElementById(`${prefix}CollabTags`).value.trim();
+      const image = document.getElementById(`${prefix}CollabImage`).files[0];
+
+      document.querySelectorAll(`#${formId} .error`).forEach(error => error.style.display = 'none');
+      if (!title) {
+        document.getElementById(`${prefix}CollabTitleError`).style.display = 'block';
+        valid = false;
+      }
+      if (!category) {
+        document.getElementById(`${prefix}CollabCategoryError`).style.display = 'block';
+        valid = false;
+      }
+      if (!description) {
+        document.getElementById(`${prefix}CollabDescriptionError`).style.display = 'block';
+        valid = false;
+      }
+      if (!skills) {
+        document.getElementById(`${prefix}RequiredSkillsError`).style.display = 'block';
+        valid = false;
+      }
+      if (!location) {
+        document.getElementById(`${prefix}CollabLocationError`).style.display = 'block';
+        valid = false;
+      }
+      if (!startDate) {
+        document.getElementById(`${prefix}CollabStartDateError`).style.display = 'block';
+        valid = false;
+      }
+      if (!endDate || new Date(endDate) <= new Date(startDate)) {
+        document.getElementById(`${prefix}CollabEndDateError`).style.display = 'block';
+        valid = false;
+      }
+      if (funding && funding < 0) {
+        document.getElementById(`${prefix}CollabFundingError`).style.display = 'block';
+        valid = false;
+      }
+      if (!tags) {
+        document.getElementById(`${prefix}CollabTagsError`).style.display = 'block';
+        valid = false;
+      }
+      if (image && !image.type.startsWith('image/')) {
+        document.getElementById(`${prefix}CollabImageError`).style.display = 'block';
+        valid = false;
+      }
+      return { valid, title, category, description, skills, location, startDate, endDate, funding, tags };
+    }
+
+    previewCollabBtn.addEventListener('click', () => {
+      const { valid, title, category, description, location, startDate, endDate, funding, tags } = validateForm('collabCreateForm', '');
+      if (valid) {
+        document.getElementById('previewTitle').textContent = title;
+        document.getElementById('previewDetails').innerHTML = `${description.slice(0, 100)}${description.length > 100 ? '...' : ''}<br>Location: ${location} | Duration: ${startDate} to ${endDate} | Funding Goal: ₹${funding || '0'}`;
+        document.getElementById('previewMeta').textContent = `Category: ${category.charAt(0).toUpperCase() + category.slice(1)} | Tags: ${tags || 'None'}`;
+        collabPreview.classList.add('active');
+      }
+    });
+
+    cancelCollabBtn.addEventListener('click', () => {
+      collabForm.reset();
+      collabPreview.classList.remove('active');
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+      showSection('browse-collabs');
+    });
+
+    collabForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const { valid } = validateForm('collabCreateForm', '');
+      if (valid) {
+        alert('Collab created successfully! Awaiting approval.');
+        collabForm.reset();
+        collabPreview.classList.remove('active');
+        showSection('pending-collabs');
+      }
+    });
+
+    // Edit Collab Form
+    const editCollabForm = document.getElementById('collabEditForm');
+    const cancelEditCollabBtn = document.getElementById('cancelEditCollabBtn');
+    const editCard = document.getElementById('editCollabForm');
+
+    function editCollab(collabId) {
+      const data = collabData[collabId];
+      if (data) {
+        document.getElementById('editCollabTitle').value = data.title;
+        document.getElementById('editCollabCategory').value = data.category;
+        document.getElementById('editCollabDescription').value = data.description;
+        document.getElementById('editRequiredSkills').value = data.skills;
+        document.getElementById('editCollabLocation').value = data.location;
+        document.getElementById('editCollabStartDate').value = data.startDate;
+        document.getElementById('editCollabEndDate').value = data.endDate;
+        document.getElementById('editCollabFunding').value = data.funding;
+        document.getElementById('editCollabTags').value = data.tags;
+        editCard.classList.add('active');
+      }
+    }
+
+    cancelEditCollabBtn.addEventListener('click', () => {
+      editCollabForm.reset();
+      editCard.classList.remove('active');
+      document.querySelectorAll('.error').forEach(error => error.style.display = 'none');
+    });
+
+    editCollabForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const { valid } = validateForm('collabEditForm', 'edit');
+      if (valid) {
+        alert('Collab updated successfully! Awaiting re-approval.');
+        editCollabForm.reset();
+        editCard.classList.remove('active');
+      }
+    });
+
+    // Burger Menu Toggle
+    document.querySelector('.burger').addEventListener('click', () => {
+      document.querySelector('.nav-links').classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
